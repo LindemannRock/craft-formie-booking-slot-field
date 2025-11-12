@@ -1,0 +1,131 @@
+{# Set default variables #}
+{% set name = field.getHtmlName() %}
+{% set value = value ?? field.defaultValue ?? null %}
+{% set dateValue = value.date ?? null %}
+{% set slotValue = value.slot ?? null %}
+
+{# Get generated dates and slots #}
+{% set availableDates = field.getAvailableDates() %}
+{% set timeSlots = field.getTimeSlots() %}
+
+<div class="fui-booking-slot-wrapper" data-fui-booking-slot>
+    {# Date Selection #}
+    <div class="fui-booking-dates" data-booking-dates>
+        <label class="fui-booking-label">{{ 'Select Date'|t('formie') }}</label>
+
+        {% if field.dateDisplayType == 'select' %}
+            {# Dropdown Select #}
+            <select
+                name="{{ name }}[date]"
+                {% if field.required %}required{% endif %}
+                data-date-input
+                class="fui-date-select"
+            >
+                <option value="">{{ field.placeholder ?: 'Select a date...'|t('formie') }}</option>
+                {% for dateConfig in availableDates %}
+                    {% set dateVal = dateConfig.date ?? dateConfig %}
+                    {% set dateLabel = dateConfig.label ?? dateVal %}
+                    <option value="{{ dateVal }}" {% if dateValue == dateVal %}selected{% endif %}>
+                        {{ dateLabel }}
+                    </option>
+                {% endfor %}
+            </select>
+        {% else %}
+            {# Radio Buttons #}
+            <div class="fui-date-options">
+                {% for dateConfig in availableDates %}
+                    {% set dateVal = dateConfig.date ?? dateConfig %}
+                    {% set dateLabel = dateConfig.label ?? dateVal %}
+
+                    <label class="fui-date-option {% if dateValue == dateVal %}is-selected{% endif %}">
+                        <input
+                            type="radio"
+                            name="{{ name }}[date]"
+                            value="{{ dateVal }}"
+                            {% if dateValue == dateVal %}checked{% endif %}
+                            {% if field.required %}required{% endif %}
+                            data-date-input
+                            class="fui-date-radio"
+                        />
+                        <span class="fui-date-label">{{ dateLabel }}</span>
+                    </label>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    {# Time Slot Selection #}
+    <div class="fui-booking-slots {% if not dateValue %}is-disabled{% endif %}" data-booking-slots>
+        <label class="fui-booking-label">{{ 'Select Time Slot'|t('formie') }}</label>
+
+        {% if field.slotDisplayType == 'select' %}
+            {# Dropdown Select #}
+            <select
+                name="{{ name }}[slot]"
+                {% if field.required %}required{% endif %}
+                data-slot-input
+                class="fui-slot-select"
+            >
+                <option value="">{{ 'Select a time slot...'|t('formie') }}</option>
+                {% for slotConfig in timeSlots %}
+                    {% set slotKey = slotConfig.startTime ~ '-' ~ slotConfig.endTime %}
+                    {% set slotLabel = slotConfig.label ?? slotKey %}
+                    {% set remaining = dateValue ? field.getRemainingCapacity(dateValue, slotKey) : field.maxCapacityPerSlot %}
+                    {% set isFull = remaining <= 0 %}
+
+                    <option
+                        value="{{ slotKey }}"
+                        {% if slotValue == slotKey %}selected{% endif %}
+                        {% if isFull %}disabled{% endif %}
+                        data-slot-key="{{ slotKey }}"
+                        data-remaining="{{ remaining }}"
+                    >
+                        {{ slotLabel }}
+                        {% if field.showRemainingCapacity %}
+                            - {% if isFull %}{{ 'Fully Booked'|t('formie') }}{% else %}{{ '{count} spots left'|t('formie', { count: remaining }) }}{% endif %}
+                        {% endif %}
+                    </option>
+                {% endfor %}
+            </select>
+        {% else %}
+            {# Radio Buttons #}
+            <div class="fui-slot-options">
+                {% for slotConfig in timeSlots %}
+                    {% set slotKey = slotConfig.startTime ~ '-' ~ slotConfig.endTime %}
+                    {% set slotLabel = slotConfig.label ?? slotKey %}
+
+                    {# Calculate remaining capacity #}
+                    {% set remaining = dateValue ? field.getRemainingCapacity(dateValue, slotKey) : field.maxCapacityPerSlot %}
+                    {% set isFull = remaining <= 0 %}
+
+                    <label class="fui-slot-option {% if slotValue == slotKey %}is-selected{% endif %} {% if isFull %}is-full{% endif %}"
+                           data-slot-key="{{ slotKey }}"
+                           data-remaining="{{ remaining }}">
+                        <input
+                            type="radio"
+                            name="{{ name }}[slot]"
+                            value="{{ slotKey }}"
+                            {% if slotValue == slotKey %}checked{% endif %}
+                            {% if field.required %}required{% endif %}
+                            {% if isFull %}disabled{% endif %}
+                            data-slot-input
+                            class="fui-slot-radio"
+                        />
+                        <span class="fui-slot-label">
+                            <span class="fui-slot-time">{{ slotLabel }}</span>
+                            {% if field.showRemainingCapacity %}
+                                <span class="fui-slot-capacity {% if isFull %}is-full{% endif %}">
+                                    {% if isFull %}
+                                        {{ 'Fully Booked'|t('formie') }}
+                                    {% else %}
+                                        {{ '{count} spot(s) left'|t('formie', { count: remaining }) }}
+                                    {% endif %}
+                                </span>
+                            {% endif %}
+                        </span>
+                    </label>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>

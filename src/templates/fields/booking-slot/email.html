@@ -1,0 +1,27 @@
+{% if value %}
+    {% set dateVal = value.date ?? '' %}
+    {% set slotVal = value.slot ?? '' %}
+
+    {# Get generated dates and slots #}
+    {% set availableDates = field.getAvailableDates() %}
+    {% set timeSlots = field.getTimeSlots() %}
+
+    {# Find date label #}
+    {% set dateLabel = dateVal %}
+    {% for dateConfig in availableDates %}
+        {% if (dateConfig.date ?? dateConfig) == dateVal %}
+            {% set dateLabel = dateConfig.label ?? dateVal %}
+        {% endif %}
+    {% endfor %}
+
+    {# Find slot label #}
+    {% set slotLabel = slotVal %}
+    {% for slotConfig in timeSlots %}
+        {% set slotKey = slotConfig.startTime ~ '-' ~ slotConfig.endTime %}
+        {% if slotKey == slotVal %}
+            {% set slotLabel = slotConfig.label ?? slotVal %}
+        {% endif %}
+    {% endfor %}
+
+    <strong>{{ field.label }}:</strong> {{ dateLabel }} | {{ slotLabel }}
+{% endif %}

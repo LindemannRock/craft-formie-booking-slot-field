@@ -1,0 +1,51 @@
+{
+    "name": "lindemannrock/craft-formie-booking-slot-field",
+    "description": "Booking slot field for Formie - Provides date and time slot selection with capacity tracking for Craft CMS Formie plugin",
+    "type": "craft-plugin",
+    "version": "3.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "formie",
+        "booking slot",
+        "reservation",
+        "time slot"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bilal Hary Lindemann",
+            "email": "bh@lindemannrock.com",
+            "homepage": "https://lindemannrock.com",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "support@lindemannrock.com",
+        "issues": "https://github.com/LindemannRock/craft-formie-booking-slot-field/issues",
+        "source": "https://github.com/LindemannRock/craft-formie-booking-slot-field",
+        "docs": "https://github.com/LindemannRock/craft-formie-booking-slot-field/blob/main/README.md",
+        "rss": "https://github.com/LindemannRock/craft-formie-booking-slot-field/commits/main.atom"
+    },
+    "require": {
+        "php": "^8.2",
+        "craftcms/cms": "^5.0.0",
+        "verbb/formie": "^3.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "lindemannrock\\formiebookingslotfield\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Formie Booking Slot Field",
+        "handle": "formie-booking-slot-field",
+        "developer": "LindemannRock",
+        "developerUrl": "https://lindemannrock.com",
+        "documentationUrl": "https://github.com/LindemannRock/craft-formie-booking-slot-field/blob/main/README.md",
+        "changelogUrl": "https://github.com/LindemannRock/craft-formie-booking-slot-field/blob/main/CHANGELOG.md",
+        "class": "lindemannrock\\formiebookingslotfield\\FormieBookingSlotField"
+    }
+}

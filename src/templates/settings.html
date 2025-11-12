@@ -1,0 +1,35 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.textField({
+    label: 'Plugin Name'|t('formie-booking-slot-field'),
+    instructions: 'The name of the plugin as it appears in the control panel.'|t('formie-booking-slot-field'),
+    id: 'pluginName',
+    name: 'pluginName',
+    value: settings.pluginName,
+    autofocus: true,
+}) }}
+
+<hr>
+
+<div class="readable">
+    <h2>{{ 'About Booking Slot Field'|t('formie-booking-slot-field') }}</h2>
+    <p>{{ 'This plugin provides a custom Formie field for booking time slots with capacity tracking. Perfect for events, reservations, and appointments.'|t('formie-booking-slot-field') }}</p>
+
+    <h3>{{ 'Features'|t('formie-booking-slot-field') }}</h3>
+    <ul>
+        <li>{{ 'Date selection with customizable available dates'|t('formie-booking-slot-field') }}</li>
+        <li>{{ 'Time slot configuration (start/end times)'|t('formie-booking-slot-field') }}</li>
+        <li>{{ 'Capacity tracking per slot'|t('formie-booking-slot-field') }}</li>
+        <li>{{ 'Real-time availability display'|t('formie-booking-slot-field') }}</li>
+        <li>{{ 'Fully responsive design'|t('formie-booking-slot-field') }}</li>
+    </ul>
+
+    <h3>{{ 'Usage'|t('formie-booking-slot-field') }}</h3>
+    <ol>
+        <li>{{ 'Add a "Booking Slot" field to your Formie form'|t('formie-booking-slot-field') }}</li>
+        <li>{{ 'Configure available dates in the field settings'|t('formie-booking-slot-field') }}</li>
+        <li>{{ 'Define time slots with start/end times'|t('formie-booking-slot-field') }}</li>
+        <li>{{ 'Set maximum capacity per slot'|t('formie-booking-slot-field') }}</li>
+        <li>{{ 'Enable/disable remaining capacity display'|t('formie-booking-slot-field') }}</li>
+    </ol>
+</div>
