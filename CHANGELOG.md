@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.4](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.0.3...v2.0.4) (2025-11-13)
+
+
+### Bug Fixes
+
+* ensure date labels are always generated ([9e3b041](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/9e3b041b3d3d03385ba17d02bf4702b805388220))
+
 ## [2.0.3](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.0.2...v2.0.3) (2025-11-13)
 
 
