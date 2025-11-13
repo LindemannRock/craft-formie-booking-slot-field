@@ -1092,6 +1092,8 @@ class BookingSlot extends FormField implements FormFieldInterface
                 'maxCapacityPerSlot' => $this->maxCapacityPerSlot,
                 'showRemainingCapacity' => $this->showRemainingCapacity,
                 'slotAvailability' => $this->getSlotAvailability(),
+                'capacityTemplate' => Craft::t('formie', $this->capacityTemplate),
+                'fullyBookedText' => Craft::t('formie', $this->fullyBookedText),
             ],
         ];
     }

@@ -134,9 +134,12 @@ window.FormieBookingSlot = class FormieBookingSlot {
                     const originalText = option.textContent.split(' - ')[0]; // Get time label part
                     if (this.settings.showRemainingCapacity) {
                         if (isFull) {
-                            option.textContent = `${originalText} - Fully Booked`;
+                            const fullyBookedText = this.settings.fullyBookedText || 'Fully Booked';
+                            option.textContent = `${originalText} - ${fullyBookedText}`;
                         } else {
-                            option.textContent = `${originalText} - ${remaining} spots left`;
+                            const template = this.settings.capacityTemplate || '{count} spot(s) left';
+                            const capacityText = template.replace('{count}', remaining);
+                            option.textContent = `${originalText} - ${capacityText}`;
                         }
                     }
                 }
@@ -160,14 +163,15 @@ window.FormieBookingSlot = class FormieBookingSlot {
                         radio.disabled = true;
                         radio.checked = false;
                         if (capacitySpan) {
-                            capacitySpan.textContent = 'Fully Booked';
+                            capacitySpan.textContent = this.settings.fullyBookedText || 'Fully Booked';
                             capacitySpan.classList.add('is-full');
                         }
                     } else {
                         option.classList.remove('is-full');
                         radio.disabled = false;
                         if (capacitySpan && this.settings.showRemainingCapacity) {
-                            capacitySpan.textContent = `${remaining} spot(s) left`;
+                            const template = this.settings.capacityTemplate || '{count} spot(s) left';
+                            capacitySpan.textContent = template.replace('{count}', remaining);
                             capacitySpan.classList.remove('is-full');
                         }
                     }
