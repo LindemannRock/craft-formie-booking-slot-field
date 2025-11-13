@@ -10,8 +10,15 @@
 
 <div class="fui-booking-slot-wrapper" data-fui-booking-slot>
     {# Date Selection #}
+    {% set datePosition = field.dateSelectionLabelPosition %}
+    {% set showDateLabel = datePosition != 'verbb\\formie\\positions\\Hidden' %}
+    {% set dateLabelAbove = not datePosition or datePosition == 'verbb\\formie\\positions\\AboveInput' %}
+    {% set dateLabelBelow = datePosition == 'verbb\\formie\\positions\\BelowInput' %}
+
     <div class="fui-booking-dates" data-booking-dates>
-        <label class="fui-booking-label">{{ field.dateSelectionLabel|t('formie') }}</label>
+        {% if showDateLabel and dateLabelAbove %}
+            <label class="fui-booking-label">{{ field.dateSelectionLabel|t('formie') }}</label>
+        {% endif %}
 
         {% if field.dateDisplayType == 'select' %}
             {# Dropdown Select #}
@@ -52,11 +59,22 @@
                 {% endfor %}
             </div>
         {% endif %}
+
+        {% if showDateLabel and dateLabelBelow %}
+            <label class="fui-booking-label mt-2">{{ field.dateSelectionLabel|t('formie') }}</label>
+        {% endif %}
     </div>
 
     {# Time Slot Selection #}
+    {% set slotPosition = field.slotSelectionLabelPosition %}
+    {% set showSlotLabel = slotPosition != 'verbb\\formie\\positions\\Hidden' %}
+    {% set slotLabelAbove = not slotPosition or slotPosition == 'verbb\\formie\\positions\\AboveInput' %}
+    {% set slotLabelBelow = slotPosition == 'verbb\\formie\\positions\\BelowInput' %}
+
     <div class="fui-booking-slots {% if not dateValue %}is-disabled{% endif %}" data-booking-slots>
-        <label class="fui-booking-label">{{ field.slotSelectionLabel|t('formie') }}</label>
+        {% if showSlotLabel and slotLabelAbove %}
+            <label class="fui-booking-label">{{ field.slotSelectionLabel|t('formie') }}</label>
+        {% endif %}
 
         {% if field.slotDisplayType == 'select' %}
             {# Dropdown Select #}
@@ -126,6 +144,10 @@
                     </label>
                 {% endfor %}
             </div>
+        {% endif %}
+
+        {% if showSlotLabel and slotLabelBelow %}
+            <label class="fui-booking-label mt-2">{{ field.slotSelectionLabel|t('formie') }}</label>
         {% endif %}
     </div>
 </div>
