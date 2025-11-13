@@ -533,6 +533,13 @@ class BookingSlot extends FormField implements FormFieldInterface
      */
     protected function cpInputHtml(mixed $value, ?ElementInterface $element, bool $inline): string
     {
+        // Ensure value is properly handled
+        if (!is_array($value) && $value) {
+            // Try to decode if it's a JSON string
+            $decoded = is_string($value) ? Json::decodeIfJson($value) : null;
+            $value = is_array($decoded) ? $decoded : null;
+        }
+
         $displayValue = '';
 
         if (is_array($value)) {
