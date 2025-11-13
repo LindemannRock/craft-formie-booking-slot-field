@@ -448,10 +448,21 @@ class BookingSlot extends FormField implements FormFieldInterface
      */
     public function getRemainingCapacity(string $date, string $slotKey): int
     {
-        // Get the form from the field's layout
+        // Get the form - in Formie 2, we need to find it differently
         $form = null;
-        if ($this->layoutId) {
-            $form = \verbb\formie\elements\Form::find()->layoutId($this->layoutId)->one();
+
+        // Try to get form from all forms and match by field handle
+        $allForms = \verbb\formie\elements\Form::find()->all();
+        foreach ($allForms as $possibleForm) {
+            $layout = $possibleForm->getFormFieldLayout();
+            if ($layout) {
+                foreach ($layout->getCustomFields() as $field) {
+                    if ($field->handle === $this->handle) {
+                        $form = $possibleForm;
+                        break 2;
+                    }
+                }
+            }
         }
 
         if (!$form) {
@@ -461,7 +472,7 @@ class BookingSlot extends FormField implements FormFieldInterface
 
         // Get all submissions for this form and field
         $submissions = \verbb\formie\elements\Submission::find()
-            ->formId($form->id)
+            ->form($form)
             ->all();
 
         $bookedCount = 0;
