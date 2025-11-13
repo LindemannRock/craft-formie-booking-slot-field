@@ -825,13 +825,6 @@ class BookingSlot extends Field implements FieldInterface
                 'inputClass' => 'text fullwidth code fui-blackout-dates-picker',
             ]),
 
-            SchemaHelper::variableTextField([
-                'label' => Craft::t('formie', 'Placeholder'),
-                'help' => Craft::t('formie', 'The text to show as a placeholder.'),
-                'name' => 'placeholder',
-                'variables' => 'plainTextVariables',
-            ]),
-
             // Text Customization
             SchemaHelper::textField([
                 'label' => Craft::t('formie', 'Date Selection Label'),
