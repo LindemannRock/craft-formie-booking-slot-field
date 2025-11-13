@@ -43,14 +43,29 @@ class BookingSlot extends Field implements FieldInterface
     public mixed $startDate = null;
 
     /**
+     * @var string Start date as string (for UI)
+     */
+    public ?string $startDateString = null;
+
+    /**
      * @var mixed End date for range mode (can be string or array from date picker)
      */
     public mixed $endDate = null;
 
     /**
+     * @var string End date as string (for UI)
+     */
+    public ?string $endDateString = null;
+
+    /**
      * @var array Specific dates (for specific mode)
      */
     public array $specificDates = [];
+
+    /**
+     * @var string Specific dates as comma-separated string (for UI)
+     */
+    public ?string $specificDatesString = null;
 
     /**
      * @var array Days of week enabled (0=Sunday, 6=Saturday)
@@ -101,6 +116,11 @@ class BookingSlot extends Field implements FieldInterface
      * @var array Blackout dates
      */
     public array $blackoutDates = [];
+
+    /**
+     * @var string Blackout dates as comma-separated string (for UI)
+     */
+    public ?string $blackoutDatesString = null;
 
     /**
      * @var string Date display format
@@ -175,6 +195,55 @@ class BookingSlot extends Field implements FieldInterface
 
         if (!is_array($this->bookedStatusIds)) {
             $this->bookedStatusIds = [];
+        }
+
+        // Convert string to array for specific dates
+        if ($this->specificDatesString && is_string($this->specificDatesString)) {
+            $dates = array_map('trim', explode(',', $this->specificDatesString));
+            $this->specificDates = [];
+            foreach ($dates as $date) {
+                if (!empty($date)) {
+                    $this->specificDates[] = [
+                        'date' => $date,
+                        'label' => '', // Will auto-generate in getAvailableDates
+                    ];
+                }
+            }
+        }
+
+        // Convert array to string for UI
+        if (empty($this->specificDatesString) && !empty($this->specificDates)) {
+            $dateStrings = [];
+            foreach ($this->specificDates as $dateConfig) {
+                if (isset($dateConfig['date'])) {
+                    $dateStrings[] = $dateConfig['date'];
+                }
+            }
+            $this->specificDatesString = implode(', ', $dateStrings);
+        }
+
+        // Convert blackout dates string to array
+        if ($this->blackoutDatesString && is_string($this->blackoutDatesString)) {
+            $dates = array_map('trim', explode(',', $this->blackoutDatesString));
+            $this->blackoutDates = array_filter($dates); // Remove empty values
+        }
+
+        // Convert array to string for UI
+        if (empty($this->blackoutDatesString) && !empty($this->blackoutDates)) {
+            $this->blackoutDatesString = implode(', ', $this->blackoutDates);
+        }
+
+        // Sync start/end date strings
+        if ($this->startDateString) {
+            $this->startDate = $this->startDateString;
+        } elseif ($this->startDate && !$this->startDateString) {
+            $this->startDateString = is_array($this->startDate) ? ($this->startDate['date'] ?? '') : $this->startDate;
+        }
+
+        if ($this->endDateString) {
+            $this->endDate = $this->endDateString;
+        } elseif ($this->endDate && !$this->endDateString) {
+            $this->endDateString = is_array($this->endDate) ? ($this->endDate['date'] ?? '') : $this->endDate;
         }
     }
 
@@ -598,11 +667,23 @@ class BookingSlot extends Field implements FieldInterface
     /**
      * @inheritdoc
      */
+    public function getSettingsHtml(): ?string
+    {
+        // Register our asset bundle for the settings page to get date pickers
+        Craft::$app->getView()->registerAssetBundle(BookingSlotFieldAsset::class);
+
+        return parent::getSettingsHtml();
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getFieldDefaults(): array
     {
         return [
             'dateMode' => 'specific',
             'specificDates' => [],
+            'specificDatesString' => '',
             'startDate' => null,
             'endDate' => null,
             'daysOfWeek' => [1, 2, 3, 4, 5], // Mon-Fri
@@ -653,49 +734,35 @@ class BookingSlot extends Field implements FieldInterface
                 ],
             ]),
 
-            // Specific Dates Mode
-            SchemaHelper::tableField([
+            // Specific Dates Mode - Multi-date picker
+            SchemaHelper::textField([
                 'label' => Craft::t('formie', 'Specific Dates'),
-                'help' => Craft::t('formie', 'Add specific dates for booking. Format: YYYY-MM-DD (e.g., 2025-12-05). The label is auto-generated if left empty.'),
-                'name' => 'specificDates',
+                'help' => Craft::t('formie', 'Click to open the date picker and select multiple dates. Selected dates will appear as a comma-separated list.'),
+                'name' => 'specificDatesString',
                 'if' => '$get(dateMode).value == specific',
                 'validation' => 'requiredIf:dateMode,specific',
-                'newRowDefaults' => [
-                    'date' => '',
-                    'label' => '',
-                ],
-                'columns' => [
-                    [
-                        'type' => 'value',
-                        'heading' => Craft::t('formie', 'Date (YYYY-MM-DD)'),
-                        'handle' => 'date',
-                        'width' => '40%',
-                    ],
-                    [
-                        'type' => 'label',
-                        'heading' => Craft::t('formie', 'Display Label (optional)'),
-                        'handle' => 'label',
-                        'width' => '60%',
-                    ],
-                ],
+                'placeholder' => Craft::t('formie', 'Click to select dates...'),
+                'inputClass' => 'text fullwidth code fui-specific-dates-picker',
             ]),
 
             // Date Range Mode
-            SchemaHelper::dateField([
+            SchemaHelper::textField([
                 'label' => Craft::t('formie', 'Start Date'),
-                'help' => Craft::t('formie', 'First date available for booking.'),
-                'name' => 'startDate',
+                'help' => Craft::t('formie', 'Click to select the first date available for booking.'),
+                'name' => 'startDateString',
                 'if' => '$get(dateMode).value == range',
                 'validation' => 'requiredIf:dateMode,range',
-                'includeTime' => false,
+                'placeholder' => Craft::t('formie', 'Click to select start date...'),
+                'inputClass' => 'text fullwidth code fui-start-date-picker',
             ]),
-            SchemaHelper::dateField([
+            SchemaHelper::textField([
                 'label' => Craft::t('formie', 'End Date'),
-                'help' => Craft::t('formie', 'Last date available for booking.'),
-                'name' => 'endDate',
+                'help' => Craft::t('formie', 'Click to select the last date available for booking.'),
+                'name' => 'endDateString',
                 'if' => '$get(dateMode).value == range',
                 'validation' => 'requiredIf:dateMode,range',
-                'includeTime' => false,
+                'placeholder' => Craft::t('formie', 'Click to select end date...'),
+                'inputClass' => 'text fullwidth code fui-end-date-picker',
             ]),
             SchemaHelper::checkboxSelectField([
                 'label' => Craft::t('formie', 'Days of Week'),
@@ -713,23 +780,13 @@ class BookingSlot extends Field implements FieldInterface
                 ],
             ]),
 
-            // Blackout Dates
-            SchemaHelper::tableField([
+            // Blackout Dates - Multi-date picker
+            SchemaHelper::textField([
                 'label' => Craft::t('formie', 'Blackout Dates (Optional)'),
-                'help' => Craft::t('formie', 'Dates to exclude from availability (holidays, etc). Leave empty if none.'),
-                'name' => 'blackoutDates',
-                'validation' => 'optional',
-                'newRowDefaults' => [
-                    'date' => '',
-                ],
-                'columns' => [
-                    [
-                        'type' => 'value',
-                        'heading' => Craft::t('formie', 'Date (YYYY-MM-DD)'),
-                        'handle' => 'date',
-                        'width' => '100%',
-                    ],
-                ],
+                'help' => Craft::t('formie', 'Click to select dates to exclude from availability (holidays, closures). You can select multiple dates.'),
+                'name' => 'blackoutDatesString',
+                'placeholder' => Craft::t('formie', 'Click to select dates to exclude...'),
+                'inputClass' => 'text fullwidth code fui-blackout-dates-picker',
             ]),
 
             SchemaHelper::variableTextField([
@@ -878,10 +935,14 @@ class BookingSlot extends Field implements FieldInterface
         $attributes = parent::settingsAttributes();
         $attributes[] = 'dateMode';
         $attributes[] = 'startDate';
+        $attributes[] = 'startDateString';
         $attributes[] = 'endDate';
+        $attributes[] = 'endDateString';
         $attributes[] = 'specificDates';
+        $attributes[] = 'specificDatesString';
         $attributes[] = 'daysOfWeek';
         $attributes[] = 'blackoutDates';
+        $attributes[] = 'blackoutDatesString';
         $attributes[] = 'operatingHoursStart';
         $attributes[] = 'operatingHoursEnd';
         $attributes[] = 'slotDuration';
@@ -894,6 +955,51 @@ class BookingSlot extends Field implements FieldInterface
         $attributes[] = 'timeDisplayFormat';
 
         return $attributes;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function defineHtmlTag(string $key, array $context = []): ?HtmlTag
+    {
+        $form = $context['form'] ?? null;
+        $errors = $context['errors'] ?? null;
+
+        if ($key === 'fieldDateSelect') {
+            return new HtmlTag('select', [
+                'class' => 'fui-select',
+                'name' => $this->getHtmlName() . '[date]',
+                'required' => $this->required ? true : null,
+                'data' => [
+                    'date-input' => true,
+                ],
+            ]);
+        }
+
+        if ($key === 'fieldSlotSelect') {
+            return new HtmlTag('select', [
+                'class' => 'fui-select',
+                'name' => $this->getHtmlName() . '[slot]',
+                'required' => $this->required ? true : null,
+                'data' => [
+                    'slot-input' => true,
+                ],
+            ]);
+        }
+
+        if ($key === 'fieldDateOption') {
+            return new HtmlTag('label', [
+                'class' => 'fui-date-option',
+            ]);
+        }
+
+        if ($key === 'fieldSlotOption') {
+            return new HtmlTag('label', [
+                'class' => 'fui-slot-option',
+            ]);
+        }
+
+        return parent::defineHtmlTag($key, $context);
     }
 
     /**

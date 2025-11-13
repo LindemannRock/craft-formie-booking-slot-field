@@ -19,7 +19,7 @@
                 name="{{ name }}[date]"
                 {% if field.required %}required{% endif %}
                 data-date-input
-                class="fui-date-select"
+                class="fui-select"
             >
                 <option value="">{{ field.placeholder ?: 'Select a date...'|t('formie') }}</option>
                 {% for dateConfig in availableDates %}
@@ -64,7 +64,7 @@
                 name="{{ name }}[slot]"
                 {% if field.required %}required{% endif %}
                 data-slot-input
-                class="fui-slot-select"
+                class="fui-select"
             >
                 <option value="">{{ 'Select a time slot...'|t('formie') }}</option>
                 {% for slotConfig in timeSlots %}
