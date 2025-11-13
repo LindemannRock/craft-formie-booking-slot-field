@@ -943,29 +943,6 @@ class BookingSlot extends Field implements FieldInterface
                 'validation' => 'required|min:1',
                 'required' => true,
             ]),
-            SchemaHelper::lightswitchField([
-                'label' => Craft::t('formie', 'Show Remaining Capacity'),
-                'help' => Craft::t('formie', 'Display how many spots are left for each time slot.'),
-                'name' => 'showRemainingCapacity',
-            ]),
-            SchemaHelper::selectField([
-                'label' => Craft::t('formie', 'Date Display Type'),
-                'help' => Craft::t('formie', 'How should dates be displayed to users?'),
-                'name' => 'dateDisplayType',
-                'options' => [
-                    ['label' => Craft::t('formie', 'Buttons (Radio)'), 'value' => 'radio'],
-                    ['label' => Craft::t('formie', 'Dropdown (Select)'), 'value' => 'select'],
-                ],
-            ]),
-            SchemaHelper::selectField([
-                'label' => Craft::t('formie', 'Slot Display Type'),
-                'help' => Craft::t('formie', 'How should time slots be displayed to users?'),
-                'name' => 'slotDisplayType',
-                'options' => [
-                    ['label' => Craft::t('formie', 'Buttons (Radio)'), 'value' => 'radio'],
-                    ['label' => Craft::t('formie', 'Dropdown (Select)'), 'value' => 'select'],
-                ],
-            ]),
             SchemaHelper::checkboxSelectField([
                 'label' => Craft::t('formie', 'Count As Booked Statuses (Optional)'),
                 'help' => Craft::t('formie', 'Select which submission statuses should count towards capacity. Leave empty to count all submissions regardless of status. Useful for excluding "Cancelled" submissions.'),
@@ -986,6 +963,29 @@ class BookingSlot extends Field implements FieldInterface
             SchemaHelper::labelPosition($this),
             SchemaHelper::instructions(),
             SchemaHelper::instructionsPosition($this),
+            SchemaHelper::selectField([
+                'label' => Craft::t('formie', 'Date Display Type'),
+                'help' => Craft::t('formie', 'How should dates be displayed to users?'),
+                'name' => 'dateDisplayType',
+                'options' => [
+                    ['label' => Craft::t('formie', 'Buttons (Radio)'), 'value' => 'radio'],
+                    ['label' => Craft::t('formie', 'Dropdown (Select)'), 'value' => 'select'],
+                ],
+            ]),
+            SchemaHelper::selectField([
+                'label' => Craft::t('formie', 'Slot Display Type'),
+                'help' => Craft::t('formie', 'How should time slots be displayed to users?'),
+                'name' => 'slotDisplayType',
+                'options' => [
+                    ['label' => Craft::t('formie', 'Buttons (Radio)'), 'value' => 'radio'],
+                    ['label' => Craft::t('formie', 'Dropdown (Select)'), 'value' => 'select'],
+                ],
+            ]),
+            SchemaHelper::lightswitchField([
+                'label' => Craft::t('formie', 'Show Remaining Capacity'),
+                'help' => Craft::t('formie', 'Display how many spots are left for each time slot.'),
+                'name' => 'showRemainingCapacity',
+            ]),
         ];
     }
 
