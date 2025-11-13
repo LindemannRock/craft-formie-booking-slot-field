@@ -907,23 +907,11 @@ class BookingSlot extends Field implements FieldInterface
                 'name' => 'dateSelectionLabel',
                 'placeholder' => 'Select Date',
             ]),
-            SchemaHelper::selectField([
-                'label' => Craft::t('formie', 'Date Label Position'),
-                'help' => Craft::t('formie', 'How the date selection label should be positioned.'),
-                'name' => 'dateSelectionLabelPosition',
-                'options' => $this->getLabelPositionOptions(),
-            ]),
             SchemaHelper::textField([
                 'label' => Craft::t('formie', 'Slot Selection Label'),
                 'help' => Craft::t('formie', 'Label shown for time slot selection.'),
                 'name' => 'slotSelectionLabel',
                 'placeholder' => 'Select Time Slot',
-            ]),
-            SchemaHelper::selectField([
-                'label' => Craft::t('formie', 'Slot Label Position'),
-                'help' => Craft::t('formie', 'How the time slot label should be positioned.'),
-                'name' => 'slotSelectionLabelPosition',
-                'options' => $this->getLabelPositionOptions(),
             ]),
             SchemaHelper::textField([
                 'label' => Craft::t('formie', 'Date Placeholder'),
@@ -1041,6 +1029,18 @@ class BookingSlot extends Field implements FieldInterface
         return [
             SchemaHelper::visibility(),
             SchemaHelper::labelPosition($this),
+            SchemaHelper::selectField([
+                'label' => Craft::t('formie', 'Date Label Position'),
+                'help' => Craft::t('formie', 'How the date selection label should be positioned.'),
+                'name' => 'dateSelectionLabelPosition',
+                'options' => $this->getLabelPositionOptions(),
+            ]),
+            SchemaHelper::selectField([
+                'label' => Craft::t('formie', 'Slot Label Position'),
+                'help' => Craft::t('formie', 'How the time slot label should be positioned.'),
+                'name' => 'slotSelectionLabelPosition',
+                'options' => $this->getLabelPositionOptions(),
+            ]),
             SchemaHelper::instructions(),
             SchemaHelper::instructionsPosition($this),
             SchemaHelper::selectField([
