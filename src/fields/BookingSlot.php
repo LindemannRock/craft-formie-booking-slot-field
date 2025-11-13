@@ -531,7 +531,7 @@ class BookingSlot extends FormField implements FormFieldInterface
     /**
      * @inheritdoc
      */
-    protected function cpInputHtml(mixed $value, ?ElementInterface $element, bool $inline): string
+    public function getInputHtml($value, ElementInterface $element = null): string
     {
         // Ensure value is properly handled
         if (!is_array($value) && $value) {
