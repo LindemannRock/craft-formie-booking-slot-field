@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.1.0](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.0.6...v2.1.0) (2025-11-13)
+
+
+### Features
+
+* add customizable and translatable labels ([56001dc](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/56001dc0dd63bc014362d77ec74127e991fd5456))
+
+
+### Bug Fixes
+
+* correctly replace {count} placeholder in capacity template ([c9f94c0](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/c9f94c02a9a8a7800bda95eb8b74ffae3dd59fc8))
+* use customizable labels in JavaScript ([16499a7](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/16499a734457f8eb2b214f5db0cae3b8be238c39))
+
 ## [2.0.6](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.0.5...v2.0.6) (2025-11-13)
 
 
