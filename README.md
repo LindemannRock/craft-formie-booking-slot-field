@@ -1,8 +1,8 @@
 # Formie Booking Slot Field Plugin
 
 [![Latest Version](https://img.shields.io/packagist/v/lindemannrock/craft-formie-booking-slot-field.svg)](https://packagist.org/packages/lindemannrock/craft-formie-booking-slot-field)
-[![Craft CMS](https://img.shields.io/badge/Craft%20CMS-4.0%20%7C%205.0+-orange.svg)](https://craftcms.com/)
-[![Formie](https://img.shields.io/badge/Formie-2.0%20%7C%203.0+-purple.svg)](https://verbb.io/craft-plugins/formie)
+[![Craft CMS](https://img.shields.io/badge/Craft%20CMS-4.0-orange.svg)](https://craftcms.com/)
+[![Formie](https://img.shields.io/badge/Formie-2.0-purple.svg)](https://verbb.io/craft-plugins/formie)
 [![PHP](https://img.shields.io/badge/PHP-8.0.2+-blue.svg)](https://php.net/)
 [![License](https://img.shields.io/packagist/l/lindemannrock/craft-formie-booking-slot-field.svg)](LICENSE)
 

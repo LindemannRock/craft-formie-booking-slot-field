@@ -13,13 +13,24 @@ use craft\base\ElementInterface;
 use craft\helpers\Json;
 use craft\helpers\Template;
 use GraphQL\Type\Definition\Type;
-use verbb\formie\base\Field;
-use verbb\formie\base\FieldInterface;
 use verbb\formie\helpers\SchemaHelper;
-use verbb\formie\models\HtmlTag;
 use yii\db\Schema;
 use lindemannrock\formiebookingslotfield\web\assets\field\BookingSlotFieldAsset;
 use lindemannrock\formiebookingslotfield\FormieBookingSlotField;
+
+// Compatibility for Formie 2 and Formie 3
+if (class_exists('verbb\formie\base\FormField')) {
+    // Formie 2.x
+    abstract class BookingSlotBaseField extends \verbb\formie\base\FormField implements \verbb\formie\base\FormFieldInterface {}
+} else {
+    // Formie 3.x
+    abstract class BookingSlotBaseField extends \verbb\formie\base\Field implements \verbb\formie\base\FieldInterface {}
+}
+
+// Import HtmlTag if it exists (Formie 3+)
+if (class_exists('verbb\formie\models\HtmlTag')) {
+    use verbb\formie\models\HtmlTag;
+}
 
 /**
  * Booking Slot field
@@ -27,7 +38,7 @@ use lindemannrock\formiebookingslotfield\FormieBookingSlotField;
  * @author LindemannRock
  * @since 1.0.0
  */
-class BookingSlot extends Field implements FieldInterface
+class BookingSlot extends BookingSlotBaseField
 {
     // Properties
     // =========================================================================
@@ -959,9 +970,15 @@ class BookingSlot extends Field implements FieldInterface
 
     /**
      * @inheritdoc
+     * Only available in Formie 3+
      */
-    public function defineHtmlTag(string $key, array $context = []): ?HtmlTag
+    public function defineHtmlTag(string $key, array $context = []): mixed
     {
+        // Only use HtmlTag if it exists (Formie 3+)
+        if (!class_exists('verbb\formie\models\HtmlTag')) {
+            return null;
+        }
+
         $form = $context['form'] ?? null;
         $errors = $context['errors'] ?? null;
 
