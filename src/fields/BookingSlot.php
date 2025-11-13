@@ -13,32 +13,20 @@ use craft\base\ElementInterface;
 use craft\helpers\Json;
 use craft\helpers\Template;
 use GraphQL\Type\Definition\Type;
+use verbb\formie\base\FormField;
+use verbb\formie\base\FormFieldInterface;
 use verbb\formie\helpers\SchemaHelper;
 use yii\db\Schema;
 use lindemannrock\formiebookingslotfield\web\assets\field\BookingSlotFieldAsset;
 use lindemannrock\formiebookingslotfield\FormieBookingSlotField;
 
-// Compatibility for Formie 2 and Formie 3
-if (class_exists('verbb\formie\base\FormField')) {
-    // Formie 2.x
-    abstract class BookingSlotBaseField extends \verbb\formie\base\FormField implements \verbb\formie\base\FormFieldInterface {}
-} else {
-    // Formie 3.x
-    abstract class BookingSlotBaseField extends \verbb\formie\base\Field implements \verbb\formie\base\FieldInterface {}
-}
-
-// Import HtmlTag if it exists (Formie 3+)
-if (class_exists('verbb\formie\models\HtmlTag')) {
-    use verbb\formie\models\HtmlTag;
-}
-
 /**
- * Booking Slot field
+ * Booking Slot field - Craft 4 / Formie 2 version
  *
  * @author LindemannRock
  * @since 1.0.0
  */
-class BookingSlot extends BookingSlotBaseField
+class BookingSlot extends FormField implements FormFieldInterface
 {
     // Properties
     // =========================================================================
@@ -968,56 +956,6 @@ class BookingSlot extends BookingSlotBaseField
         return $attributes;
     }
 
-    /**
-     * @inheritdoc
-     * Only available in Formie 3+
-     */
-    public function defineHtmlTag(string $key, array $context = []): mixed
-    {
-        // Only use HtmlTag if it exists (Formie 3+)
-        if (!class_exists('verbb\formie\models\HtmlTag')) {
-            return null;
-        }
-
-        $form = $context['form'] ?? null;
-        $errors = $context['errors'] ?? null;
-
-        if ($key === 'fieldDateSelect') {
-            return new HtmlTag('select', [
-                'class' => 'fui-select',
-                'name' => $this->getHtmlName() . '[date]',
-                'required' => $this->required ? true : null,
-                'data' => [
-                    'date-input' => true,
-                ],
-            ]);
-        }
-
-        if ($key === 'fieldSlotSelect') {
-            return new HtmlTag('select', [
-                'class' => 'fui-select',
-                'name' => $this->getHtmlName() . '[slot]',
-                'required' => $this->required ? true : null,
-                'data' => [
-                    'slot-input' => true,
-                ],
-            ]);
-        }
-
-        if ($key === 'fieldDateOption') {
-            return new HtmlTag('label', [
-                'class' => 'fui-date-option',
-            ]);
-        }
-
-        if ($key === 'fieldSlotOption') {
-            return new HtmlTag('label', [
-                'class' => 'fui-slot-option',
-            ]);
-        }
-
-        return parent::defineHtmlTag($key, $context);
-    }
 
     /**
      * @inheritdoc
