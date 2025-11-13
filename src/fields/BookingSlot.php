@@ -138,9 +138,19 @@ class BookingSlot extends Field implements FieldInterface
     public string $dateSelectionLabel = 'Select Date';
 
     /**
+     * @var string Position for date selection label
+     */
+    public string $dateSelectionLabelPosition = 'verbb\\formie\\positions\\AboveInput';
+
+    /**
      * @var string Label for slot selection
      */
     public string $slotSelectionLabel = 'Select Time Slot';
+
+    /**
+     * @var string Position for slot selection label
+     */
+    public string $slotSelectionLabelPosition = 'verbb\\formie\\positions\\AboveInput';
 
     /**
      * @var string Placeholder for date dropdown
@@ -293,6 +303,20 @@ class BookingSlot extends Field implements FieldInterface
         }
 
         return $options;
+    }
+
+    /**
+     * Get label position options
+     */
+    private function getLabelPositionOptions(): array
+    {
+        return [
+            ['label' => Craft::t('formie', 'Above Input'), 'value' => 'verbb\\formie\\positions\\AboveInput'],
+            ['label' => Craft::t('formie', 'Below Input'), 'value' => 'verbb\\formie\\positions\\BelowInput'],
+            ['label' => Craft::t('formie', 'Left of Input'), 'value' => 'verbb\\formie\\positions\\LeftInput'],
+            ['label' => Craft::t('formie', 'Right of Input'), 'value' => 'verbb\\formie\\positions\\RightInput'],
+            ['label' => Craft::t('formie', 'Hidden'), 'value' => 'verbb\\formie\\positions\\Hidden'],
+        ];
     }
 
     /**
@@ -726,7 +750,9 @@ class BookingSlot extends Field implements FieldInterface
             'dateDisplayType' => 'radio',
             'slotDisplayType' => 'radio',
             'dateSelectionLabel' => 'Select Date',
+            'dateSelectionLabelPosition' => 'verbb\\formie\\positions\\AboveInput',
             'slotSelectionLabel' => 'Select Time Slot',
+            'slotSelectionLabelPosition' => 'verbb\\formie\\positions\\AboveInput',
             'datePlaceholder' => 'Select a date...',
             'slotPlaceholder' => 'Select a time slot...',
             'capacityTemplate' => '{count} spot(s) left',
@@ -877,15 +903,27 @@ class BookingSlot extends Field implements FieldInterface
             // Text Customization
             SchemaHelper::textField([
                 'label' => Craft::t('formie', 'Date Selection Label'),
-                'help' => Craft::t('formie', 'Label shown above date selection.'),
+                'help' => Craft::t('formie', 'Label shown for date selection.'),
                 'name' => 'dateSelectionLabel',
                 'placeholder' => 'Select Date',
             ]),
+            SchemaHelper::selectField([
+                'label' => Craft::t('formie', 'Date Label Position'),
+                'help' => Craft::t('formie', 'How the date selection label should be positioned.'),
+                'name' => 'dateSelectionLabelPosition',
+                'options' => $this->getLabelPositionOptions(),
+            ]),
             SchemaHelper::textField([
                 'label' => Craft::t('formie', 'Slot Selection Label'),
-                'help' => Craft::t('formie', 'Label shown above time slot selection.'),
+                'help' => Craft::t('formie', 'Label shown for time slot selection.'),
                 'name' => 'slotSelectionLabel',
                 'placeholder' => 'Select Time Slot',
+            ]),
+            SchemaHelper::selectField([
+                'label' => Craft::t('formie', 'Slot Label Position'),
+                'help' => Craft::t('formie', 'How the time slot label should be positioned.'),
+                'name' => 'slotSelectionLabelPosition',
+                'options' => $this->getLabelPositionOptions(),
             ]),
             SchemaHelper::textField([
                 'label' => Craft::t('formie', 'Date Placeholder'),
@@ -1080,7 +1118,9 @@ class BookingSlot extends Field implements FieldInterface
         $attributes[] = 'dateDisplayType';
         $attributes[] = 'slotDisplayType';
         $attributes[] = 'dateSelectionLabel';
+        $attributes[] = 'dateSelectionLabelPosition';
         $attributes[] = 'slotSelectionLabel';
+        $attributes[] = 'slotSelectionLabelPosition';
         $attributes[] = 'datePlaceholder';
         $attributes[] = 'slotPlaceholder';
         $attributes[] = 'capacityTemplate';
