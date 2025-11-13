@@ -82,7 +82,7 @@
                     >
                         {{ slotLabel }}
                         {% if field.showRemainingCapacity %}
-                            - {% if isFull %}{{ field.fullyBookedText|t('formie') }}{% else %}{{ field.capacityTemplate|t('formie', { count: remaining }) }}{% endif %}
+                            - {% if isFull %}{{ field.fullyBookedText|t('formie') }}{% else %}{{ field.capacityTemplate|t('formie')|replace('{count}', remaining) }}{% endif %}
                         {% endif %}
                     </option>
                 {% endfor %}
@@ -118,7 +118,7 @@
                                     {% if isFull %}
                                         {{ field.fullyBookedText|t('formie') }}
                                     {% else %}
-                                        {{ field.capacityTemplate|t('formie', { count: remaining }) }}
+                                        {{ field.capacityTemplate|t('formie')|replace('{count}', remaining) }}
                                     {% endif %}
                                 </span>
                             {% endif %}
