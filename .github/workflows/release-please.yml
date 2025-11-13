@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - craft4
 
 permissions:
   contents: write
@@ -17,3 +18,4 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_TOKEN }}
           release-type: php
+          target-branch: ${{ github.ref_name }}
