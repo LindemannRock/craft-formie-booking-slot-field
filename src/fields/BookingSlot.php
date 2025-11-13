@@ -311,6 +311,7 @@ class BookingSlot extends Field implements FieldInterface
     private function getLabelPositionOptions(): array
     {
         return [
+            ['label' => Craft::t('formie', 'Form Default'), 'value' => ''],
             ['label' => Craft::t('formie', 'Above Input'), 'value' => 'verbb\\formie\\positions\\AboveInput'],
             ['label' => Craft::t('formie', 'Below Input'), 'value' => 'verbb\\formie\\positions\\BelowInput'],
             ['label' => Craft::t('formie', 'Left of Input'), 'value' => 'verbb\\formie\\positions\\LeftInput'],
@@ -750,9 +751,9 @@ class BookingSlot extends Field implements FieldInterface
             'dateDisplayType' => 'radio',
             'slotDisplayType' => 'radio',
             'dateSelectionLabel' => 'Select Date',
-            'dateSelectionLabelPosition' => 'verbb\\formie\\positions\\AboveInput',
+            'dateSelectionLabelPosition' => '',
             'slotSelectionLabel' => 'Select Time Slot',
-            'slotSelectionLabelPosition' => 'verbb\\formie\\positions\\AboveInput',
+            'slotSelectionLabelPosition' => '',
             'datePlaceholder' => 'Select a date...',
             'slotPlaceholder' => 'Select a time slot...',
             'capacityTemplate' => '{count} spot(s) left',

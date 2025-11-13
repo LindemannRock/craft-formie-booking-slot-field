@@ -10,16 +10,19 @@
 
 <div class="fui-booking-slot-wrapper" data-fui-booking-slot>
     {# Date Selection #}
-    {% set datePosition = field.dateSelectionLabelPosition %}
+    {% set datePosition = field.dateSelectionLabelPosition ?: form.settings.defaultLabelPosition %}
     {% set showDateLabel = datePosition != 'verbb\\formie\\positions\\Hidden' %}
     {% set dateLabelAbove = not datePosition or datePosition == 'verbb\\formie\\positions\\AboveInput' %}
     {% set dateLabelBelow = datePosition == 'verbb\\formie\\positions\\BelowInput' %}
+    {% set dateLabelLeft = datePosition == 'verbb\\formie\\positions\\LeftInput' %}
+    {% set dateLabelRight = datePosition == 'verbb\\formie\\positions\\RightInput' %}
 
-    <div class="fui-booking-dates" data-booking-dates>
-        {% if showDateLabel and dateLabelAbove %}
-            <label class="fui-booking-label">{{ field.dateSelectionLabel|t('formie') }}</label>
+    <div class="fui-booking-dates {{ dateLabelLeft or dateLabelRight ? 'flex items-center gap-4' }} {{ dateLabelRight ? 'flex-row-reverse' }}" data-booking-dates>
+        {% if showDateLabel and (dateLabelAbove or dateLabelLeft or dateLabelRight) %}
+            <label class="fui-booking-label {{ dateLabelLeft or dateLabelRight ? 'flex-shrink-0 mb-0' }}">{{ field.dateSelectionLabel|t('formie') }}</label>
         {% endif %}
 
+        <div class="{{ dateLabelLeft or dateLabelRight ? 'flex-1' }}">
         {% if field.dateDisplayType == 'select' %}
             {# Dropdown Select #}
             <select
@@ -59,6 +62,7 @@
                 {% endfor %}
             </div>
         {% endif %}
+        </div>
 
         {% if showDateLabel and dateLabelBelow %}
             <label class="fui-booking-label mt-2">{{ field.dateSelectionLabel|t('formie') }}</label>
@@ -66,15 +70,19 @@
     </div>
 
     {# Time Slot Selection #}
-    {% set slotPosition = field.slotSelectionLabelPosition %}
+    {% set slotPosition = field.slotSelectionLabelPosition ?: form.settings.defaultLabelPosition %}
     {% set showSlotLabel = slotPosition != 'verbb\\formie\\positions\\Hidden' %}
     {% set slotLabelAbove = not slotPosition or slotPosition == 'verbb\\formie\\positions\\AboveInput' %}
     {% set slotLabelBelow = slotPosition == 'verbb\\formie\\positions\\BelowInput' %}
+    {% set slotLabelLeft = slotPosition == 'verbb\\formie\\positions\\LeftInput' %}
+    {% set slotLabelRight = slotPosition == 'verbb\\formie\\positions\\RightInput' %}
 
-    <div class="fui-booking-slots {% if not dateValue %}is-disabled{% endif %}" data-booking-slots>
-        {% if showSlotLabel and slotLabelAbove %}
-            <label class="fui-booking-label">{{ field.slotSelectionLabel|t('formie') }}</label>
+    <div class="fui-booking-slots {{ slotLabelLeft or slotLabelRight ? 'flex items-center gap-4' }} {{ slotLabelRight ? 'flex-row-reverse' }} {% if not dateValue %}is-disabled{% endif %}" data-booking-slots>
+        {% if showSlotLabel and (slotLabelAbove or slotLabelLeft or slotLabelRight) %}
+            <label class="fui-booking-label {{ slotLabelLeft or slotLabelRight ? 'flex-shrink-0 mb-0' }}">{{ field.slotSelectionLabel|t('formie') }}</label>
         {% endif %}
+
+        <div class="{{ slotLabelLeft or slotLabelRight ? 'flex-1' }}">
 
         {% if field.slotDisplayType == 'select' %}
             {# Dropdown Select #}
@@ -145,6 +153,7 @@
                 {% endfor %}
             </div>
         {% endif %}
+        </div>
 
         {% if showSlotLabel and slotLabelBelow %}
             <label class="fui-booking-label mt-2">{{ field.slotSelectionLabel|t('formie') }}</label>
