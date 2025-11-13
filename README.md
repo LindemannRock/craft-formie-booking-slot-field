@@ -1,18 +1,20 @@
 # Formie Booking Slot Field Plugin
 
 [![Latest Version](https://img.shields.io/packagist/v/lindemannrock/craft-formie-booking-slot-field.svg)](https://packagist.org/packages/lindemannrock/craft-formie-booking-slot-field)
-[![Craft CMS](https://img.shields.io/badge/Craft%20CMS-4.0%20%7C%205.0+-orange.svg)](https://craftcms.com/)
-[![Formie](https://img.shields.io/badge/Formie-2.0%20%7C%203.0+-purple.svg)](https://verbb.io/craft-plugins/formie)
-[![PHP](https://img.shields.io/badge/PHP-8.0.2+-blue.svg)](https://php.net/)
+[![Craft CMS](https://img.shields.io/badge/Craft%20CMS-5.0+-orange.svg)](https://craftcms.com/)
+[![Formie](https://img.shields.io/badge/Formie-3.0+-purple.svg)](https://verbb.io/craft-plugins/formie)
+[![PHP](https://img.shields.io/badge/PHP-8.2+-blue.svg)](https://php.net/)
 [![License](https://img.shields.io/packagist/l/lindemannrock/craft-formie-booking-slot-field.svg)](LICENSE)
 
 A Craft CMS plugin that provides a flexible booking slot field for Verbb's Formie form builder, with date and time slot selection, automatic slot generation, and real-time capacity tracking.
 
 ## Requirements
 
-- Craft CMS 4.0 or greater
-- PHP 8.0.2 or greater
-- Formie 2.0 or greater
+- Craft CMS 5.0 or greater
+- PHP 8.2 or greater
+- Formie 3.0 or greater
+
+> **Note:** For Craft 4 and Formie 2 support, use the `formie-2-craft-4` branch or version 2.x of this plugin.
 
 ## Features
 
