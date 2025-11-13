@@ -748,7 +748,40 @@ class BookingSlot extends Field implements FieldInterface
         $rules[] = [['slotDuration'], 'required'];
         $rules[] = [['operatingHoursStart', 'operatingHoursEnd'], 'required'];
 
+        // Validate that end time is after start time
+        $rules[] = [
+            ['operatingHoursEnd'],
+            'compare',
+            'compareAttribute' => 'operatingHoursStart',
+            'operator' => '>',
+            'message' => Craft::t('formie', 'End time must be after start time.'),
+        ];
+
+        // Custom validation for slot duration
+        $rules[] = [['slotDuration'], 'validateSlotDuration'];
+
         return $rules;
+    }
+
+    /**
+     * Validate that slot duration fits within operating hours
+     */
+    public function validateSlotDuration($attribute, $params)
+    {
+        if (!$this->operatingHoursStart || !$this->operatingHoursEnd) {
+            return;
+        }
+
+        $start = new \DateTime($this->operatingHoursStart);
+        $end = new \DateTime($this->operatingHoursEnd);
+        $diffMinutes = ($end->getTimestamp() - $start->getTimestamp()) / 60;
+
+        if ($this->slotDuration >= $diffMinutes) {
+            $this->addError($attribute, Craft::t('formie', 'Slot duration ({duration} min) must be less than operating hours ({hours} min).', [
+                'duration' => $this->slotDuration,
+                'hours' => $diffMinutes,
+            ]));
+        }
     }
 
     /**
