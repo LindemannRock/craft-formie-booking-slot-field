@@ -783,6 +783,13 @@ class BookingSlot extends Field implements FieldInterface
 
         $start = new \DateTime($this->operatingHoursStart);
         $end = new \DateTime($this->operatingHoursEnd);
+
+        // If end is before start, they've set an invalid time range
+        if ($end <= $start) {
+            // The operatingHoursEnd validation will catch this
+            return;
+        }
+
         $diffMinutes = ($end->getTimestamp() - $start->getTimestamp()) / 60;
 
         if ($this->slotDuration >= $diffMinutes) {
