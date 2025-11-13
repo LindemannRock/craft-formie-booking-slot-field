@@ -851,6 +851,56 @@ class BookingSlot extends FormField implements FormFieldInterface
                 'name' => 'placeholder',
                 'variables' => 'plainTextVariables',
             ]),
+
+            // Text Customization
+            SchemaHelper::textField([
+                'label' => Craft::t('formie', 'Date Selection Label'),
+                'help' => Craft::t('formie', 'Label shown above date selection.'),
+                'name' => 'dateSelectionLabel',
+                'placeholder' => 'Select Date',
+            ]),
+            SchemaHelper::textField([
+                'label' => Craft::t('formie', 'Slot Selection Label'),
+                'help' => Craft::t('formie', 'Label shown above time slot selection.'),
+                'name' => 'slotSelectionLabel',
+                'placeholder' => 'Select Time Slot',
+            ]),
+            SchemaHelper::textField([
+                'label' => Craft::t('formie', 'Date Placeholder'),
+                'help' => Craft::t('formie', 'Placeholder for date dropdown.'),
+                'name' => 'datePlaceholder',
+                'placeholder' => 'Select a date...',
+            ]),
+            SchemaHelper::textField([
+                'label' => Craft::t('formie', 'Slot Placeholder'),
+                'help' => Craft::t('formie', 'Placeholder for time slot dropdown.'),
+                'name' => 'slotPlaceholder',
+                'placeholder' => 'Select a time slot...',
+            ]),
+            SchemaHelper::textField([
+                'label' => Craft::t('formie', 'Capacity Text Template'),
+                'help' => Craft::t('formie', 'Template for showing remaining spots. Use {count} for the number.'),
+                'name' => 'capacityTemplate',
+                'placeholder' => '{count} spot(s) left',
+            ]),
+            SchemaHelper::textField([
+                'label' => Craft::t('formie', 'Fully Booked Text'),
+                'help' => Craft::t('formie', 'Text shown when a slot is full.'),
+                'name' => 'fullyBookedText',
+                'placeholder' => 'Fully Booked',
+            ]),
+            SchemaHelper::textField([
+                'label' => Craft::t('formie', 'Date Display Format'),
+                'help' => Craft::t('formie', 'PHP date format for displaying dates (e.g., F jS, Y = December 5th, 2025).'),
+                'name' => 'dateDisplayFormat',
+                'placeholder' => 'F jS, Y',
+            ]),
+            SchemaHelper::textField([
+                'label' => Craft::t('formie', 'Time Display Format'),
+                'help' => Craft::t('formie', 'PHP date format for displaying times (e.g., g:i A = 9:00 AM).'),
+                'name' => 'timeDisplayFormat',
+                'placeholder' => 'g:i A',
+            ]),
         ];
     }
 
@@ -956,54 +1006,6 @@ class BookingSlot extends FormField implements FormFieldInterface
             SchemaHelper::labelPosition($this),
             SchemaHelper::instructions(),
             SchemaHelper::instructionsPosition($this),
-            SchemaHelper::textField([
-                'label' => Craft::t('formie', 'Date Selection Label'),
-                'help' => Craft::t('formie', 'Label shown above date selection (translatable via formie.php).'),
-                'name' => 'dateSelectionLabel',
-                'placeholder' => 'Select Date',
-            ]),
-            SchemaHelper::textField([
-                'label' => Craft::t('formie', 'Slot Selection Label'),
-                'help' => Craft::t('formie', 'Label shown above time slot selection (translatable via formie.php).'),
-                'name' => 'slotSelectionLabel',
-                'placeholder' => 'Select Time Slot',
-            ]),
-            SchemaHelper::textField([
-                'label' => Craft::t('formie', 'Date Placeholder'),
-                'help' => Craft::t('formie', 'Placeholder for date dropdown (translatable via formie.php).'),
-                'name' => 'datePlaceholder',
-                'placeholder' => 'Select a date...',
-            ]),
-            SchemaHelper::textField([
-                'label' => Craft::t('formie', 'Slot Placeholder'),
-                'help' => Craft::t('formie', 'Placeholder for time slot dropdown (translatable via formie.php).'),
-                'name' => 'slotPlaceholder',
-                'placeholder' => 'Select a time slot...',
-            ]),
-            SchemaHelper::textField([
-                'label' => Craft::t('formie', 'Capacity Text Template'),
-                'help' => Craft::t('formie', 'Template for showing remaining spots. Use {count} for the number (translatable via formie.php).'),
-                'name' => 'capacityTemplate',
-                'placeholder' => '{count} spot(s) left',
-            ]),
-            SchemaHelper::textField([
-                'label' => Craft::t('formie', 'Fully Booked Text'),
-                'help' => Craft::t('formie', 'Text shown when a slot is full (translatable via formie.php).'),
-                'name' => 'fullyBookedText',
-                'placeholder' => 'Fully Booked',
-            ]),
-            SchemaHelper::textField([
-                'label' => Craft::t('formie', 'Date Display Format'),
-                'help' => Craft::t('formie', 'PHP date format for displaying dates (e.g., F jS, Y = December 5th, 2025).'),
-                'name' => 'dateDisplayFormat',
-                'placeholder' => 'F jS, Y',
-            ]),
-            SchemaHelper::textField([
-                'label' => Craft::t('formie', 'Time Display Format'),
-                'help' => Craft::t('formie', 'PHP date format for displaying times (e.g., g:i A = 9:00 AM).'),
-                'name' => 'timeDisplayFormat',
-                'placeholder' => 'g:i A',
-            ]),
         ];
     }
 
