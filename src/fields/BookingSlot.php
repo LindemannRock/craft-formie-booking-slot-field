@@ -871,13 +871,13 @@ class BookingSlot extends Field implements FieldInterface
             ]),
             SchemaHelper::textField([
                 'label' => Craft::t('formie', 'Date Display Format'),
-                'help' => Craft::t('formie', 'PHP date format for displaying dates (e.g., F jS, Y = December 5th, 2025).'),
+                'help' => Craft::t('formie', 'PHP date format for displaying dates. Examples: F jS, Y = December 5th, 2025 | Y-m-d = 2025-12-05 | d/m/Y = 05/12/2025. <a href="https://www.php.net/manual/en/datetime.format.php" target="_blank">See all formats →</a>'),
                 'name' => 'dateDisplayFormat',
                 'placeholder' => 'F jS, Y',
             ]),
             SchemaHelper::textField([
                 'label' => Craft::t('formie', 'Time Display Format'),
-                'help' => Craft::t('formie', 'PHP date format for displaying times (e.g., g:i A = 9:00 AM).'),
+                'help' => Craft::t('formie', 'PHP time format for displaying times. Examples: g:i A = 9:00 AM | H:i = 09:00 | g:i a = 9:00 am. <a href="https://www.php.net/manual/en/datetime.format.php" target="_blank">See all formats →</a>'),
                 'name' => 'timeDisplayFormat',
                 'placeholder' => 'g:i A',
             ]),
