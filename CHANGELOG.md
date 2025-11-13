@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.3](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.0.2...v2.0.3) (2025-11-13)
+
+
+### Bug Fixes
+
+* update form lookup for Formie 2 compatibility ([a611872](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/a6118721428cfadceeee1102beacccf4e3557bf1))
+
 ## [2.0.2](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.0.1...v2.0.2) (2025-11-13)
 
 
