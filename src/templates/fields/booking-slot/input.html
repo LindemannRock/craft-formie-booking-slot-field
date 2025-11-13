@@ -10,7 +10,7 @@
 
 <div class="fui-booking-slot-wrapper" data-fui-booking-slot>
     {# Date Selection #}
-    {% set datePosition = field.dateSelectionLabelPosition ?: form.settings.defaultLabelPosition %}
+    {% set datePosition = field.dateSelectionLabelPosition is not empty ? field.dateSelectionLabelPosition : form.settings.defaultLabelPosition %}
     {% set showDateLabel = datePosition != 'verbb\\formie\\positions\\Hidden' %}
     {% set dateLabelAbove = not datePosition or datePosition == 'verbb\\formie\\positions\\AboveInput' %}
     {% set dateLabelBelow = datePosition == 'verbb\\formie\\positions\\BelowInput' %}
@@ -70,7 +70,7 @@
     </div>
 
     {# Time Slot Selection #}
-    {% set slotPosition = field.slotSelectionLabelPosition ?: form.settings.defaultLabelPosition %}
+    {% set slotPosition = field.slotSelectionLabelPosition is not empty ? field.slotSelectionLabelPosition : form.settings.defaultLabelPosition %}
     {% set showSlotLabel = slotPosition != 'verbb\\formie\\positions\\Hidden' %}
     {% set slotLabelAbove = not slotPosition or slotPosition == 'verbb\\formie\\positions\\AboveInput' %}
     {% set slotLabelBelow = slotPosition == 'verbb\\formie\\positions\\BelowInput' %}
