@@ -302,9 +302,12 @@ class BookingSlot extends FormField implements FormFieldInterface
             // Use specific dates
             foreach ($this->specificDates as $dateConfig) {
                 if (!empty($dateConfig['date']) && !in_array($dateConfig['date'], $this->blackoutDates)) {
+                    // Generate label if empty or not provided
+                    $label = !empty($dateConfig['label']) ? $dateConfig['label'] : date($this->dateDisplayFormat, strtotime($dateConfig['date']));
+
                     $dates[] = [
                         'date' => $dateConfig['date'],
-                        'label' => $dateConfig['label'] ?? date($this->dateDisplayFormat, strtotime($dateConfig['date'])),
+                        'label' => $label,
                     ];
                 }
             }
