@@ -93,6 +93,19 @@ class FormieBookingSlotField extends Plugin
             }
         );
 
+        // Register Flatpickr enhancement for CP field settings
+        if (Craft::$app->request->getIsCpRequest()) {
+            Event::on(
+                View::class,
+                View::EVENT_END_BODY,
+                function() {
+                    Craft::$app->getView()->registerAssetBundle(
+                        \lindemannrock\formiebookingslotfield\web\assets\field\BookingSlotCpAsset::class
+                    );
+                }
+            );
+        }
+
         // Set the plugin name from settings
         $settings = $this->getSettings();
         if ($settings && !empty($settings->pluginName)) {
