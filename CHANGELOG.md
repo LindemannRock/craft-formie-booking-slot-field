@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.5](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.0.4...v2.0.5) (2025-11-13)
+
+
+### Bug Fixes
+
+* handle non-array values in cpInputHtml ([2407c55](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/2407c5570edbbc30787db442634715722e8eed67))
+
 ## [2.0.4](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.0.3...v2.0.4) (2025-11-13)
 
 
