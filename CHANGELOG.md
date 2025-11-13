@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.6](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.0.5...v2.0.6) (2025-11-13)
+
+
+### Bug Fixes
+
+* use getInputHtml instead of cpInputHtml for Formie 2 ([cf8309e](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/cf8309e051cfc01fb70c973b2ff27c0b66dfd725))
+
 ## [2.0.5](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.0.4...v2.0.5) (2025-11-13)
 
 
