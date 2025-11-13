@@ -11,7 +11,7 @@
 <div class="fui-booking-slot-wrapper" data-fui-booking-slot>
     {# Date Selection #}
     <div class="fui-booking-dates" data-booking-dates>
-        <label class="fui-booking-label">{{ 'Select Date'|t('formie') }}</label>
+        <label class="fui-booking-label">{{ field.dateSelectionLabel|t('formie') }}</label>
 
         {% if field.dateDisplayType == 'select' %}
             {# Dropdown Select #}
@@ -21,7 +21,7 @@
                 data-date-input
                 class="fui-select"
             >
-                <option value="">{{ field.placeholder ?: 'Select a date...'|t('formie') }}</option>
+                <option value="">{{ field.datePlaceholder|t('formie') }}</option>
                 {% for dateConfig in availableDates %}
                     {% set dateVal = dateConfig.date ?? dateConfig %}
                     {% set dateLabel = dateConfig.label ?? dateVal %}
@@ -56,7 +56,7 @@
 
     {# Time Slot Selection #}
     <div class="fui-booking-slots {% if not dateValue %}is-disabled{% endif %}" data-booking-slots>
-        <label class="fui-booking-label">{{ 'Select Time Slot'|t('formie') }}</label>
+        <label class="fui-booking-label">{{ field.slotSelectionLabel|t('formie') }}</label>
 
         {% if field.slotDisplayType == 'select' %}
             {# Dropdown Select #}
@@ -66,7 +66,7 @@
                 data-slot-input
                 class="fui-select"
             >
-                <option value="">{{ 'Select a time slot...'|t('formie') }}</option>
+                <option value="">{{ field.slotPlaceholder|t('formie') }}</option>
                 {% for slotConfig in timeSlots %}
                     {% set slotKey = slotConfig.startTime ~ '-' ~ slotConfig.endTime %}
                     {% set slotLabel = slotConfig.label ?? slotKey %}
@@ -82,7 +82,7 @@
                     >
                         {{ slotLabel }}
                         {% if field.showRemainingCapacity %}
-                            - {% if isFull %}{{ 'Fully Booked'|t('formie') }}{% else %}{{ '{count} spots left'|t('formie', { count: remaining }) }}{% endif %}
+                            - {% if isFull %}{{ field.fullyBookedText|t('formie') }}{% else %}{{ field.capacityTemplate|t('formie', { count: remaining }) }}{% endif %}
                         {% endif %}
                     </option>
                 {% endfor %}
@@ -116,9 +116,9 @@
                             {% if field.showRemainingCapacity %}
                                 <span class="fui-slot-capacity {% if isFull %}is-full{% endif %}">
                                     {% if isFull %}
-                                        {{ 'Fully Booked'|t('formie') }}
+                                        {{ field.fullyBookedText|t('formie') }}
                                     {% else %}
-                                        {{ '{count} spot(s) left'|t('formie', { count: remaining }) }}
+                                        {{ field.capacityTemplate|t('formie', { count: remaining }) }}
                                     {% endif %}
                                 </span>
                             {% endif %}
