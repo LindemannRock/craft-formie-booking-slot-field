@@ -417,7 +417,7 @@ class BookingSlot extends FormField implements FormFieldInterface
     /**
      * @inheritdoc
      */
-    public function getDefaultValue(): mixed
+    public function getDefaultValue($attributePrefix = '')
     {
         return null;
     }
