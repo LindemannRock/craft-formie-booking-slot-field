@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.1.0...v2.2.0) (2025-11-14)
+
+
+### Features
+
+* port features from main to craft4 ([e546e5c](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/e546e5c75a649a343adf12454eb652916ce8e211))
+
 ## [2.1.0](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.0.6...v2.1.0) (2025-11-13)
 
 
