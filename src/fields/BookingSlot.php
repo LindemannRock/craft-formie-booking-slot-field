@@ -37,6 +37,11 @@ class BookingSlot extends FormField implements FormFieldInterface
     public string $dateMode = 'specific';
 
     /**
+     * @var string Start date option (today, tomorrow, specific)
+     */
+    public string $startDateOption = 'today';
+
+    /**
      * @var mixed Start date for range mode (can be string or array from date picker)
      */
     public mixed $startDate = null;
@@ -45,6 +50,11 @@ class BookingSlot extends FormField implements FormFieldInterface
      * @var string Start date as string (for UI)
      */
     public ?string $startDateString = null;
+
+    /**
+     * @var string End date option (+7, +14, +30, +60, +90, specific)
+     */
+    public string $endDateOption = '+30';
 
     /**
      * @var mixed End date for range mode (can be string or array from date picker)
@@ -137,9 +147,19 @@ class BookingSlot extends FormField implements FormFieldInterface
     public string $dateSelectionLabel = 'Select Date';
 
     /**
+     * @var string Position for date selection label
+     */
+    public string $dateSelectionLabelPosition = '';
+
+    /**
      * @var string Label for slot selection
      */
     public string $slotSelectionLabel = 'Select Time Slot';
+
+    /**
+     * @var string Position for slot selection label
+     */
+    public string $slotSelectionLabelPosition = '';
 
     /**
      * @var string Placeholder for date dropdown
@@ -295,24 +315,55 @@ class BookingSlot extends FormField implements FormFieldInterface
     }
 
     /**
+     * Get label position options
+     */
+    private function getLabelPositionOptions(): array
+    {
+        return [
+            ['label' => Craft::t('formie', 'Form Default'), 'value' => ''],
+            ['label' => Craft::t('formie', 'Above Input'), 'value' => 'verbb\\formie\\positions\\AboveInput'],
+            ['label' => Craft::t('formie', 'Below Input'), 'value' => 'verbb\\formie\\positions\\BelowInput'],
+            ['label' => Craft::t('formie', 'Left of Input'), 'value' => 'verbb\\formie\\positions\\LeftInput'],
+            ['label' => Craft::t('formie', 'Right of Input'), 'value' => 'verbb\\formie\\positions\\RightInput'],
+            ['label' => Craft::t('formie', 'Hidden'), 'value' => 'verbb\\formie\\positions\\Hidden'],
+        ];
+    }
+
+    /**
      * Generate available dates based on configuration
      */
     public function getAvailableDates(): array
     {
         $dates = [];
 
-        if ($this->dateMode === 'range' && $this->startDate && $this->endDate) {
-            // Normalize date picker values (can be array or string)
-            $startDateStr = is_array($this->startDate) ? ($this->startDate['date'] ?? null) : $this->startDate;
-            $endDateStr = is_array($this->endDate) ? ($this->endDate['date'] ?? null) : $this->endDate;
-
-            if (!$startDateStr || !$endDateStr) {
-                return [];
+        if ($this->dateMode === 'range') {
+            // Calculate start date based on option
+            if ($this->startDateOption === 'today') {
+                $start = new \DateTime('today');
+            } elseif ($this->startDateOption === 'tomorrow') {
+                $start = new \DateTime('tomorrow');
+            } else {
+                // Specific date
+                $startDateStr = is_array($this->startDate) ? ($this->startDate['date'] ?? null) : $this->startDate;
+                if (!$startDateStr && !$this->startDateString) {
+                    return [];
+                }
+                $start = new \DateTime($this->startDateString ?: $startDateStr);
             }
 
-            // Generate dates from range
-            $start = new \DateTime($startDateStr);
-            $end = new \DateTime($endDateStr);
+            // Calculate end date based on option
+            if ($this->endDateOption === 'specific') {
+                // Specific date
+                $endDateStr = is_array($this->endDate) ? ($this->endDate['date'] ?? null) : $this->endDate;
+                if (!$endDateStr && !$this->endDateString) {
+                    return [];
+                }
+                $end = new \DateTime($this->endDateString ?: $endDateStr);
+            } else {
+                // Relative date (+7, +14, +30, etc.)
+                $days = (int)str_replace('+', '', $this->endDateOption);
+                $end = (clone $start)->modify("+{$days} days");
+            }
             $interval = new \DateInterval('P1D');
             $period = new \DatePeriod($start, $interval, $end->modify('+1 day'));
 
@@ -734,8 +785,12 @@ class BookingSlot extends FormField implements FormFieldInterface
             'dateMode' => 'specific',
             'specificDates' => [],
             'specificDatesString' => '',
+            'startDateOption' => 'today',
             'startDate' => null,
+            'startDateString' => '',
+            'endDateOption' => '+30',
             'endDate' => null,
+            'endDateString' => '',
             'daysOfWeek' => [1, 2, 3, 4, 5], // Mon-Fri
             'blackoutDates' => [],
             'operatingHoursStart' => '09:00',
@@ -746,7 +801,9 @@ class BookingSlot extends FormField implements FormFieldInterface
             'dateDisplayType' => 'radio',
             'slotDisplayType' => 'radio',
             'dateSelectionLabel' => 'Select Date',
+            'dateSelectionLabelPosition' => '',
             'slotSelectionLabel' => 'Select Time Slot',
+            'slotSelectionLabelPosition' => '',
             'datePlaceholder' => 'Select a date...',
             'slotPlaceholder' => 'Select a time slot...',
             'capacityTemplate' => '{count} spot(s) left',
@@ -768,7 +825,56 @@ class BookingSlot extends FormField implements FormFieldInterface
         $rules[] = [['slotDuration'], 'required'];
         $rules[] = [['operatingHoursStart', 'operatingHoursEnd'], 'required'];
 
+        // Custom validation
+        $rules[] = [['operatingHoursEnd'], 'validateOperatingHours'];
+        $rules[] = [['slotDuration'], 'validateSlotDuration'];
+
         return $rules;
+    }
+
+    /**
+     * Validate that end time is after start time
+     */
+    public function validateOperatingHours($attribute, $params)
+    {
+        if (!$this->operatingHoursStart || !$this->operatingHoursEnd) {
+            return;
+        }
+
+        $start = new \DateTime($this->operatingHoursStart);
+        $end = new \DateTime($this->operatingHoursEnd);
+
+        if ($end <= $start) {
+            $this->addError($attribute, Craft::t('formie', 'End time must be after start time.'));
+        }
+    }
+
+    /**
+     * Validate that slot duration fits within operating hours
+     */
+    public function validateSlotDuration($attribute, $params)
+    {
+        if (!$this->operatingHoursStart || !$this->operatingHoursEnd) {
+            return;
+        }
+
+        $start = new \DateTime($this->operatingHoursStart);
+        $end = new \DateTime($this->operatingHoursEnd);
+
+        // If end is before start, they've set an invalid time range
+        if ($end <= $start) {
+            // The operatingHoursEnd validation will catch this
+            return;
+        }
+
+        $diffMinutes = ($end->getTimestamp() - $start->getTimestamp()) / 60;
+
+        if ($this->slotDuration >= $diffMinutes) {
+            $this->addError($attribute, Craft::t('formie', 'Slot duration ({duration} min) must be less than operating hours ({hours} min).', [
+                'duration' => $this->slotDuration,
+                'hours' => $diffMinutes,
+            ]));
+        }
     }
 
     /**
@@ -802,21 +908,46 @@ class BookingSlot extends FormField implements FormFieldInterface
             ]),
 
             // Date Range Mode
-            SchemaHelper::textField([
+            SchemaHelper::selectField([
                 'label' => Craft::t('formie', 'Start Date'),
-                'help' => Craft::t('formie', 'Click to select the first date available for booking.'),
-                'name' => 'startDateString',
+                'help' => Craft::t('formie', 'Choose when bookings should start.'),
+                'name' => 'startDateOption',
                 'if' => '$get(dateMode).value == range',
-                'validation' => 'requiredIf:dateMode,range',
+                'options' => [
+                    ['label' => Craft::t('formie', 'Today'), 'value' => 'today'],
+                    ['label' => Craft::t('formie', 'Tomorrow'), 'value' => 'tomorrow'],
+                    ['label' => Craft::t('formie', 'Specific Date'), 'value' => 'specific'],
+                ],
+            ]),
+            SchemaHelper::textField([
+                'label' => Craft::t('formie', 'Specific Start Date'),
+                'help' => Craft::t('formie', 'Click to select the start date.'),
+                'name' => 'startDateString',
+                'if' => '$get(dateMode).value == range && $get(startDateOption).value == specific',
+                'validation' => 'requiredIf:startDateOption,specific',
                 'placeholder' => Craft::t('formie', 'Click to select start date...'),
                 'inputClass' => 'text fullwidth code fui-start-date-picker',
             ]),
-            SchemaHelper::textField([
+            SchemaHelper::selectField([
                 'label' => Craft::t('formie', 'End Date'),
-                'help' => Craft::t('formie', 'Click to select the last date available for booking.'),
-                'name' => 'endDateString',
+                'help' => Craft::t('formie', 'Choose when bookings should end.'),
+                'name' => 'endDateOption',
                 'if' => '$get(dateMode).value == range',
-                'validation' => 'requiredIf:dateMode,range',
+                'options' => [
+                    ['label' => Craft::t('formie', '+7 days'), 'value' => '+7'],
+                    ['label' => Craft::t('formie', '+14 days'), 'value' => '+14'],
+                    ['label' => Craft::t('formie', '+30 days'), 'value' => '+30'],
+                    ['label' => Craft::t('formie', '+60 days'), 'value' => '+60'],
+                    ['label' => Craft::t('formie', '+90 days'), 'value' => '+90'],
+                    ['label' => Craft::t('formie', 'Specific Date'), 'value' => 'specific'],
+                ],
+            ]),
+            SchemaHelper::textField([
+                'label' => Craft::t('formie', 'Specific End Date'),
+                'help' => Craft::t('formie', 'Click to select the end date.'),
+                'name' => 'endDateString',
+                'if' => '$get(dateMode).value == range && $get(endDateOption).value == specific',
+                'validation' => 'requiredIf:endDateOption,specific',
                 'placeholder' => Craft::t('formie', 'Click to select end date...'),
                 'inputClass' => 'text fullwidth code fui-end-date-picker',
             ]),
@@ -974,16 +1105,48 @@ class BookingSlot extends FormField implements FormFieldInterface
         return [
             SchemaHelper::visibility(),
             SchemaHelper::labelPosition($this),
-            SchemaHelper::instructions(),
-            SchemaHelper::instructionsPosition($this),
+
+            // Date Section
+            SchemaHelper::selectField([
+                'label' => Craft::t('formie', 'Date Label Position'),
+                'help' => Craft::t('formie', 'How the date selection label should be positioned.'),
+                'name' => 'dateSelectionLabelPosition',
+                'options' => $this->getLabelPositionOptions(),
+            ]),
             SchemaHelper::selectField([
                 'label' => Craft::t('formie', 'Date Display Type'),
-                'help' => Craft::t('formie', 'How should dates be displayed to users?'),
+                'help' => Craft::t('formie', 'How should dates be displayed to users? Buttons for few dates, Dropdown for many.'),
                 'name' => 'dateDisplayType',
                 'options' => [
                     ['label' => Craft::t('formie', 'Buttons (Radio)'), 'value' => 'radio'],
                     ['label' => Craft::t('formie', 'Dropdown (Select)'), 'value' => 'select'],
                 ],
+            ]),
+            SchemaHelper::selectField([
+                'label' => Craft::t('formie', 'Date Format'),
+                'help' => Craft::t('formie', 'How dates should be formatted for display.'),
+                'name' => 'dateDisplayFormat',
+                'options' => [
+                    ['label' => 'YYYY-MM-DD (' . date('Y-m-d') . ')', 'value' => 'Y-m-d'],
+                    ['label' => 'MM-DD-YYYY (' . date('m-d-Y') . ')', 'value' => 'm-d-Y'],
+                    ['label' => 'DD-MM-YYYY (' . date('d-m-Y') . ')', 'value' => 'd-m-Y'],
+                    ['label' => 'YYYY/MM/DD (' . date('Y/m/d') . ')', 'value' => 'Y/m/d'],
+                    ['label' => 'MM/DD/YYYY (' . date('m/d/Y') . ')', 'value' => 'm/d/Y'],
+                    ['label' => 'DD/MM/YYYY (' . date('d/m/Y') . ')', 'value' => 'd/m/Y'],
+                    ['label' => 'YYYY.MM.DD (' . date('Y.m.d') . ')', 'value' => 'Y.m.d'],
+                    ['label' => 'MM.DD.YYYY (' . date('m.d.Y') . ')', 'value' => 'm.d.Y'],
+                    ['label' => 'DD.MM.YYYY (' . date('d.m.Y') . ')', 'value' => 'd.m.Y'],
+                    ['label' => 'Month Day, Year (' . date('F jS, Y') . ')', 'value' => 'F jS, Y'],
+                    ['label' => 'Mon Day, Year (' . date('M j, Y') . ')', 'value' => 'M j, Y'],
+                ],
+            ]),
+
+            // Slot Section
+            SchemaHelper::selectField([
+                'label' => Craft::t('formie', 'Slot Label Position'),
+                'help' => Craft::t('formie', 'How the slot selection label should be positioned.'),
+                'name' => 'slotSelectionLabelPosition',
+                'options' => $this->getLabelPositionOptions(),
             ]),
             SchemaHelper::selectField([
                 'label' => Craft::t('formie', 'Slot Display Type'),
@@ -994,11 +1157,29 @@ class BookingSlot extends FormField implements FormFieldInterface
                     ['label' => Craft::t('formie', 'Dropdown (Select)'), 'value' => 'select'],
                 ],
             ]),
+            SchemaHelper::selectField([
+                'label' => Craft::t('formie', 'Time Format'),
+                'help' => Craft::t('formie', 'How times should be formatted for display.'),
+                'name' => 'timeDisplayFormat',
+                'options' => [
+                    ['label' => '23:59:59 (HH:MM:SS)', 'value' => 'H:i:s'],
+                    ['label' => '03:59:59 PM (H:MM:SS AM/PM)', 'value' => 'h:i:s A'],
+                    ['label' => '23:59 (HH:MM)', 'value' => 'H:i'],
+                    ['label' => '03:59 PM (H:MM AM/PM)', 'value' => 'h:i A'],
+                    ['label' => '3:59 PM (H:MM AM/PM)', 'value' => 'g:i A'],
+                ],
+            ]),
+
+            // Capacity
             SchemaHelper::lightswitchField([
                 'label' => Craft::t('formie', 'Show Remaining Capacity'),
                 'help' => Craft::t('formie', 'Display how many spots are left for each time slot.'),
                 'name' => 'showRemainingCapacity',
             ]),
+
+            // Standard Formie fields at end
+            SchemaHelper::instructions(),
+            SchemaHelper::instructionsPosition($this),
         ];
     }
 
@@ -1033,8 +1214,10 @@ class BookingSlot extends FormField implements FormFieldInterface
     {
         $attributes = parent::settingsAttributes();
         $attributes[] = 'dateMode';
+        $attributes[] = 'startDateOption';
         $attributes[] = 'startDate';
         $attributes[] = 'startDateString';
+        $attributes[] = 'endDateOption';
         $attributes[] = 'endDate';
         $attributes[] = 'endDateString';
         $attributes[] = 'specificDates';
@@ -1051,7 +1234,9 @@ class BookingSlot extends FormField implements FormFieldInterface
         $attributes[] = 'dateDisplayType';
         $attributes[] = 'slotDisplayType';
         $attributes[] = 'dateSelectionLabel';
+        $attributes[] = 'dateSelectionLabelPosition';
         $attributes[] = 'slotSelectionLabel';
+        $attributes[] = 'slotSelectionLabelPosition';
         $attributes[] = 'datePlaceholder';
         $attributes[] = 'slotPlaceholder';
         $attributes[] = 'capacityTemplate';
