@@ -720,7 +720,7 @@ class BookingSlot extends Field implements FieldInterface
                             ${ field.settings.operatingHoursStart || "09:00" } - ...
                         </div>
                         <div v-if="field.settings.showRemainingCapacity" style="font-size: 12px; color: #059669;">
-                            ${ field.settings.capacityTemplate || "{count} spots left" }
+                            ${ (field.settings.capacityTemplate || &#39;X spots left&#39;).replace(/&#123;count&#125;/g, field.settings.maxCapacityPerSlot || 10) }
                         </div>
                     </div>
                     <div style="padding: 14px; border: 2px solid #e5e7eb; border-radius: 6px; background: white;">
@@ -728,7 +728,7 @@ class BookingSlot extends Field implements FieldInterface
                             ... - ${ field.settings.operatingHoursEnd || "17:00" }
                         </div>
                         <div v-if="field.settings.showRemainingCapacity" style="font-size: 12px; color: #059669;">
-                            ${ field.settings.capacityTemplate || "{count} spots left" }
+                            ${ (field.settings.capacityTemplate || &#39;X spots left&#39;).replace(/&#123;count&#125;/g, field.settings.maxCapacityPerSlot || 10) }
                         </div>
                     </div>
                 </div>
