@@ -702,13 +702,13 @@ class BookingSlot extends Field implements FieldInterface
                     <div style="padding: 12px; border: 2px solid #e5e7eb; border-radius: 4px; background: white; font-size: 12px;">
                         <div style="font-weight: 600; margin-bottom: 4px;">10:00 AM - 12:00 PM</div>
                         <div v-if="field.settings.showRemainingCapacity" style="font-size: 11px; color: #059669;">
-                            ${ (field.settings.capacityTemplate || "{count} spot(s) left").replace("{count}", field.settings.maxCapacityPerSlot || 10) }
+                            ${ (field.settings.capacityTemplate || &#39;{count} spots left&#39;).replace(&#39;{count}&#39;, field.settings.maxCapacityPerSlot || 10) }
                         </div>
                     </div>
                     <div style="padding: 12px; border: 2px solid #e5e7eb; border-radius: 4px; background: white; font-size: 12px;">
                         <div style="font-weight: 600; margin-bottom: 4px;">12:00 PM - 2:00 PM</div>
                         <div v-if="field.settings.showRemainingCapacity" style="font-size: 11px; color: #059669;">
-                            ${ (field.settings.capacityTemplate || "{count} spot(s) left").replace("{count}", field.settings.maxCapacityPerSlot || 10) }
+                            ${ (field.settings.capacityTemplate || &#39;{count} spots left&#39;).replace(&#39;{count}&#39;, field.settings.maxCapacityPerSlot || 10) }
                         </div>
                     </div>
                 </div>
