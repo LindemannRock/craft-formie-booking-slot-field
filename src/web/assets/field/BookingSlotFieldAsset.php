@@ -35,8 +35,10 @@ class BookingSlotFieldAsset extends AssetBundle
             $isDevMode ? 'booking-slot.js' : 'booking-slot.min.js',
         ];
 
-        // Add settings page JS if in CP
+        // Add settings page JS if in CP (loads Flatpickr for field settings)
         if (Craft::$app->request->getIsCpRequest()) {
+            $this->css[] = 'flatpickr.min.css';
+            $this->js[] = 'flatpickr.min.js';
             $this->js[] = 'settings.js';
         }
 

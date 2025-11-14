@@ -384,9 +384,12 @@ class BookingSlot extends Field implements FieldInterface
             // Use specific dates
             foreach ($this->specificDates as $dateConfig) {
                 if (!empty($dateConfig['date']) && !in_array($dateConfig['date'], $this->blackoutDates)) {
+                    // Generate label if empty or not provided
+                    $label = !empty($dateConfig['label']) ? $dateConfig['label'] : date($this->dateDisplayFormat, strtotime($dateConfig['date']));
+
                     $dates[] = [
                         'date' => $dateConfig['date'],
-                        'label' => $dateConfig['label'] ?? date($this->dateDisplayFormat, strtotime($dateConfig['date'])),
+                        'label' => $label,
                     ];
                 }
             }
@@ -1029,18 +1032,6 @@ class BookingSlot extends Field implements FieldInterface
                 'name' => 'fullyBookedText',
                 'placeholder' => 'Fully Booked',
             ]),
-            SchemaHelper::textField([
-                'label' => Craft::t('formie', 'Date Display Format'),
-                'help' => Craft::t('formie', 'PHP date format (e.g., F jS, Y = December 5th, 2025 or Y-m-d = 2025-12-05). Reference: php.net/manual/en/datetime.format.php'),
-                'name' => 'dateDisplayFormat',
-                'placeholder' => 'F jS, Y',
-            ]),
-            SchemaHelper::textField([
-                'label' => Craft::t('formie', 'Time Display Format'),
-                'help' => Craft::t('formie', 'PHP time format (e.g., g:i A = 9:00 AM or H:i = 09:00). Reference: php.net/manual/en/datetime.format.php'),
-                'name' => 'timeDisplayFormat',
-                'placeholder' => 'g:i A',
-            ]),
         ];
     }
 
@@ -1121,6 +1112,8 @@ class BookingSlot extends Field implements FieldInterface
         return [
             SchemaHelper::visibility(),
             SchemaHelper::labelPosition($this),
+
+            // Date Section
             SchemaHelper::selectField([
                 'label' => Craft::t('formie', 'Date Label Position'),
                 'help' => Craft::t('formie', 'How the date selection label should be positioned.'),
@@ -1128,21 +1121,39 @@ class BookingSlot extends Field implements FieldInterface
                 'options' => $this->getLabelPositionOptions(),
             ]),
             SchemaHelper::selectField([
-                'label' => Craft::t('formie', 'Slot Label Position'),
-                'help' => Craft::t('formie', 'How the time slot label should be positioned.'),
-                'name' => 'slotSelectionLabelPosition',
-                'options' => $this->getLabelPositionOptions(),
-            ]),
-            SchemaHelper::instructions(),
-            SchemaHelper::instructionsPosition($this),
-            SchemaHelper::selectField([
                 'label' => Craft::t('formie', 'Date Display Type'),
-                'help' => Craft::t('formie', 'How should dates be displayed to users?'),
+                'help' => Craft::t('formie', 'How should dates be displayed to users? Buttons for few dates, Dropdown for many.'),
                 'name' => 'dateDisplayType',
                 'options' => [
                     ['label' => Craft::t('formie', 'Buttons (Radio)'), 'value' => 'radio'],
                     ['label' => Craft::t('formie', 'Dropdown (Select)'), 'value' => 'select'],
                 ],
+            ]),
+            SchemaHelper::selectField([
+                'label' => Craft::t('formie', 'Date Format'),
+                'help' => Craft::t('formie', 'How dates should be formatted for display.'),
+                'name' => 'dateDisplayFormat',
+                'options' => [
+                    ['label' => 'YYYY-MM-DD (' . date('Y-m-d') . ')', 'value' => 'Y-m-d'],
+                    ['label' => 'MM-DD-YYYY (' . date('m-d-Y') . ')', 'value' => 'm-d-Y'],
+                    ['label' => 'DD-MM-YYYY (' . date('d-m-Y') . ')', 'value' => 'd-m-Y'],
+                    ['label' => 'YYYY/MM/DD (' . date('Y/m/d') . ')', 'value' => 'Y/m/d'],
+                    ['label' => 'MM/DD/YYYY (' . date('m/d/Y') . ')', 'value' => 'm/d/Y'],
+                    ['label' => 'DD/MM/YYYY (' . date('d/m/Y') . ')', 'value' => 'd/m/Y'],
+                    ['label' => 'YYYY.MM.DD (' . date('Y.m.d') . ')', 'value' => 'Y.m.d'],
+                    ['label' => 'MM.DD.YYYY (' . date('m.d.Y') . ')', 'value' => 'm.d.Y'],
+                    ['label' => 'DD.MM.YYYY (' . date('d.m.Y') . ')', 'value' => 'd.m.Y'],
+                    ['label' => 'Month Day, Year (' . date('F jS, Y') . ')', 'value' => 'F jS, Y'],
+                    ['label' => 'Mon Day, Year (' . date('M j, Y') . ')', 'value' => 'M j, Y'],
+                ],
+            ]),
+
+            // Slot Section
+            SchemaHelper::selectField([
+                'label' => Craft::t('formie', 'Slot Label Position'),
+                'help' => Craft::t('formie', 'How the slot selection label should be positioned.'),
+                'name' => 'slotSelectionLabelPosition',
+                'options' => $this->getLabelPositionOptions(),
             ]),
             SchemaHelper::selectField([
                 'label' => Craft::t('formie', 'Slot Display Type'),
@@ -1153,11 +1164,29 @@ class BookingSlot extends Field implements FieldInterface
                     ['label' => Craft::t('formie', 'Dropdown (Select)'), 'value' => 'select'],
                 ],
             ]),
+            SchemaHelper::selectField([
+                'label' => Craft::t('formie', 'Time Format'),
+                'help' => Craft::t('formie', 'How times should be formatted for display.'),
+                'name' => 'timeDisplayFormat',
+                'options' => [
+                    ['label' => '23:59:59 (HH:MM:SS)', 'value' => 'H:i:s'],
+                    ['label' => '03:59:59 PM (H:MM:SS AM/PM)', 'value' => 'h:i:s A'],
+                    ['label' => '23:59 (HH:MM)', 'value' => 'H:i'],
+                    ['label' => '03:59 PM (H:MM AM/PM)', 'value' => 'h:i A'],
+                    ['label' => '3:59 PM (H:MM AM/PM)', 'value' => 'g:i A'],
+                ],
+            ]),
+
+            // Capacity
             SchemaHelper::lightswitchField([
                 'label' => Craft::t('formie', 'Show Remaining Capacity'),
                 'help' => Craft::t('formie', 'Display how many spots are left for each time slot.'),
                 'name' => 'showRemainingCapacity',
             ]),
+
+            // Standard Formie fields at end
+            SchemaHelper::instructions(),
+            SchemaHelper::instructionsPosition($this),
         ];
     }
 
