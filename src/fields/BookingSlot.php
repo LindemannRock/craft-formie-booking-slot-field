@@ -689,11 +689,8 @@ class BookingSlot extends Field implements FieldInterface
                 <div v-else style="display: flex; gap: 8px; flex-wrap: wrap;">
                     <!-- Specific Dates Mode -->
                     <template v-if="field.settings.dateMode === \'specific\'">
-                        <div style="padding: 10px 20px; border: 2px solid #e5e7eb; border-radius: 6px; background: white; font-size: 14px; color: #374151;">
-                            Dec 5, 2025
-                        </div>
-                        <div style="padding: 10px 20px; border: 2px solid #2d5016; border-radius: 6px; background: #2d5016; color: white; font-size: 14px;">
-                            Dec 6, 2025
+                        <div style="padding: 10px 20px; border: 2px solid #e5e7eb; border-radius: 6px; background: white; font-size: 13px; color: #374151;">
+                            ${ field.settings.specificDatesString || "Specific dates will appear here" }
                         </div>
                     </template>
                     <!-- Date Range Mode -->
@@ -723,7 +720,7 @@ class BookingSlot extends Field implements FieldInterface
                             ${ field.settings.operatingHoursStart || "09:00" } - ...
                         </div>
                         <div v-if="field.settings.showRemainingCapacity" style="font-size: 12px; color: #059669;">
-                            ${ field.settings.maxCapacityPerSlot || 10 } spots left
+                            ${ field.settings.capacityTemplate || "{count} spots left" }
                         </div>
                     </div>
                     <div style="padding: 14px; border: 2px solid #e5e7eb; border-radius: 6px; background: white;">
@@ -731,17 +728,17 @@ class BookingSlot extends Field implements FieldInterface
                             ... - ${ field.settings.operatingHoursEnd || "17:00" }
                         </div>
                         <div v-if="field.settings.showRemainingCapacity" style="font-size: 12px; color: #059669;">
-                            ${ field.settings.maxCapacityPerSlot || 10 } spots left
+                            ${ field.settings.capacityTemplate || "{count} spots left" }
                         </div>
                     </div>
                 </div>
 
                 <!-- Config Summary -->
-                <div style="margin-top: 12px; padding: 8px 12px; background: #e0e7ff; border-radius: 4px; font-size: 11px; color: #4338ca;">
-                    <strong>Config:</strong>
-                    ${ field.settings.dateMode === \'specific\' ? \'Specific Dates\' : \'Date Range\' } |
-                    ${ field.settings.slotDuration || 60 } min slots |
-                    ${ field.settings.maxCapacityPerSlot || 10 } capacity
+                <div style="margin-top: 12px; padding: 8px 12px; background: #e0e7ff; border-radius: 4px; font-size: 11px; color: #4338ca; line-height: 1.6;">
+                    <div><strong>📅 Mode:</strong> ${ field.settings.dateMode === \'specific\' ? \'Specific Dates\' : \'Date Range\' }</div>
+                    <div><strong>⏱️ Slots:</strong> ${ field.settings.slotDuration || 60 } min each</div>
+                    <div><strong>👥 Capacity:</strong> ${ field.settings.maxCapacityPerSlot || 10 } per slot</div>
+                    <div v-if="field.settings.blackoutDatesString"><strong>🚫 Blackout:</strong> ${ field.settings.blackoutDatesString }</div>
                 </div>
             </div>
         </div>';
