@@ -677,47 +677,71 @@ class BookingSlot extends Field implements FieldInterface
      */
     public function getPreviewInputHtml(): string
     {
-        return '<div class="fui-booking-slot-preview" style="padding: 12px;">
-            <div style="display: flex; flex-direction: column; gap: 12px;">
-                <div style="font-size: 13px; color: #666; font-weight: 600;">${ field.settings.dateSelectionLabel || "Select Date" }</div>
+        return '<div class="fui-booking-slot-preview" style="padding: 12px; background: #f9fafb; border-radius: 4px;">
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                <!-- Date Label -->
+                <div style="font-size: 14px; color: #374151; font-weight: 600;">${ field.settings.dateSelectionLabel || "Select Date" }</div>
 
-                <div v-if="field.settings.dateDisplayType === \'select\'" style="padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 4px; background: white; color: #666;">
+                <!-- Date Selection Preview -->
+                <div v-if="field.settings.dateDisplayType === \'select\'" style="padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; background: white; color: #6b7280;">
                     ${ field.settings.datePlaceholder || "Select a date..." }
                 </div>
                 <div v-else style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <!-- Specific Dates Mode -->
                     <template v-if="field.settings.dateMode === \'specific\'">
-                        <div style="padding: 8px 16px; border: 2px solid #e5e7eb; border-radius: 4px; background: white; font-size: 13px;">
-                            Specific Dates
+                        <div style="padding: 10px 20px; border: 2px solid #e5e7eb; border-radius: 6px; background: white; font-size: 14px; color: #374151;">
+                            Dec 5, 2025
+                        </div>
+                        <div style="padding: 10px 20px; border: 2px solid #2d5016; border-radius: 6px; background: #2d5016; color: white; font-size: 14px;">
+                            Dec 6, 2025
                         </div>
                     </template>
+                    <!-- Date Range Mode -->
                     <template v-else>
-                        <div style="padding: 8px 16px; border: 2px solid #e5e7eb; border-radius: 4px; background: white; font-size: 13px;">
-                            Date Range
+                        <div style="padding: 10px 20px; border: 2px solid #e5e7eb; border-radius: 6px; background: white; font-size: 14px; color: #374151;">
+                            ${ field.settings.startDateString || field.settings.startDate?.date || "Start Date" }
                         </div>
-                        <div style="padding: 8px 16px; border: 2px solid #2d5016; border-radius: 4px; background: #2d5016; color: white; font-size: 13px;">
-                            (Multiple Dates)
+                        <div style="padding: 4px 8px; background: #e5e7eb; border-radius: 4px; font-size: 11px; color: #6b7280; align-self: center;">
+                            to
+                        </div>
+                        <div style="padding: 10px 20px; border: 2px solid #2d5016; border-radius: 6px; background: #2d5016; color: white; font-size: 14px;">
+                            ${ field.settings.endDateString || field.settings.endDate?.date || "End Date" }
                         </div>
                     </template>
                 </div>
 
-                <div style="font-size: 13px; color: #666; font-weight: 600; margin-top: 8px;">${ field.settings.slotSelectionLabel || "Select Time Slot" }</div>
+                <!-- Slot Label -->
+                <div style="font-size: 14px; color: #374151; font-weight: 600; margin-top: 8px;">${ field.settings.slotSelectionLabel || "Select Time Slot" }</div>
 
-                <div v-if="field.settings.slotDisplayType === \'select\'" style="padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 4px; background: white; color: #666;">
+                <!-- Slot Selection Preview -->
+                <div v-if="field.settings.slotDisplayType === \'select\'" style="padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; background: white; color: #6b7280;">
                     ${ field.settings.slotPlaceholder || "Select a time slot..." }
                 </div>
-                <div v-else style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
-                    <div style="padding: 12px; border: 2px solid #e5e7eb; border-radius: 4px; background: white; font-size: 12px;">
-                        <div style="font-weight: 600; margin-bottom: 4px;">10:00 AM - 12:00 PM</div>
-                        <div v-if="field.settings.showRemainingCapacity" style="font-size: 11px; color: #059669;">
+                <div v-else style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px;">
+                    <div style="padding: 14px; border: 2px solid #e5e7eb; border-radius: 6px; background: white;">
+                        <div style="font-weight: 600; margin-bottom: 6px; color: #1f2937; font-size: 13px;">
+                            ${ field.settings.operatingHoursStart || "09:00" } - ...
+                        </div>
+                        <div v-if="field.settings.showRemainingCapacity" style="font-size: 12px; color: #059669;">
                             ${ field.settings.maxCapacityPerSlot || 10 } spots left
                         </div>
                     </div>
-                    <div style="padding: 12px; border: 2px solid #e5e7eb; border-radius: 4px; background: white; font-size: 12px;">
-                        <div style="font-weight: 600; margin-bottom: 4px;">12:00 PM - 2:00 PM</div>
-                        <div v-if="field.settings.showRemainingCapacity" style="font-size: 11px; color: #059669;">
+                    <div style="padding: 14px; border: 2px solid #e5e7eb; border-radius: 6px; background: white;">
+                        <div style="font-weight: 600; margin-bottom: 6px; color: #1f2937; font-size: 13px;">
+                            ... - ${ field.settings.operatingHoursEnd || "17:00" }
+                        </div>
+                        <div v-if="field.settings.showRemainingCapacity" style="font-size: 12px; color: #059669;">
                             ${ field.settings.maxCapacityPerSlot || 10 } spots left
                         </div>
                     </div>
+                </div>
+
+                <!-- Config Summary -->
+                <div style="margin-top: 12px; padding: 8px 12px; background: #e0e7ff; border-radius: 4px; font-size: 11px; color: #4338ca;">
+                    <strong>Config:</strong>
+                    ${ field.settings.dateMode === \'specific\' ? \'Specific Dates\' : \'Date Range\' } |
+                    ${ field.settings.slotDuration || 60 } min slots |
+                    ${ field.settings.maxCapacityPerSlot || 10 } capacity
                 </div>
             </div>
         </div>';
