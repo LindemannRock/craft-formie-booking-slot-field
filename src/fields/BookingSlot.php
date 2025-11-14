@@ -685,12 +685,19 @@ class BookingSlot extends Field implements FieldInterface
                     ${ field.settings.datePlaceholder || "Select a date..." }
                 </div>
                 <div v-else style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <div style="padding: 8px 16px; border: 2px solid #e5e7eb; border-radius: 4px; background: white; font-size: 13px;">
-                        Date 1
-                    </div>
-                    <div style="padding: 8px 16px; border: 2px solid #2d5016; border-radius: 4px; background: #2d5016; color: white; font-size: 13px;">
-                        Date 2
-                    </div>
+                    <template v-if="field.settings.dateMode === \'specific\'">
+                        <div style="padding: 8px 16px; border: 2px solid #e5e7eb; border-radius: 4px; background: white; font-size: 13px;">
+                            Specific Dates
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div style="padding: 8px 16px; border: 2px solid #e5e7eb; border-radius: 4px; background: white; font-size: 13px;">
+                            Date Range
+                        </div>
+                        <div style="padding: 8px 16px; border: 2px solid #2d5016; border-radius: 4px; background: #2d5016; color: white; font-size: 13px;">
+                            (Multiple Dates)
+                        </div>
+                    </template>
                 </div>
 
                 <div style="font-size: 13px; color: #666; font-weight: 600; margin-top: 8px;">${ field.settings.slotSelectionLabel || "Select Time Slot" }</div>
