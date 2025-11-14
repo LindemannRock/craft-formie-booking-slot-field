@@ -38,6 +38,11 @@ class BookingSlot extends Field implements FieldInterface
     public string $dateMode = 'specific';
 
     /**
+     * @var string Start date option (today, tomorrow, specific)
+     */
+    public string $startDateOption = 'today';
+
+    /**
      * @var mixed Start date for range mode (can be string or array from date picker)
      */
     public mixed $startDate = null;
@@ -46,6 +51,11 @@ class BookingSlot extends Field implements FieldInterface
      * @var string Start date as string (for UI)
      */
     public ?string $startDateString = null;
+
+    /**
+     * @var string End date option (+7, +14, +30, +60, +90, specific)
+     */
+    public string $endDateOption = '+30';
 
     /**
      * @var mixed End date for range mode (can be string or array from date picker)
@@ -327,18 +337,34 @@ class BookingSlot extends Field implements FieldInterface
     {
         $dates = [];
 
-        if ($this->dateMode === 'range' && $this->startDate && $this->endDate) {
-            // Normalize date picker values (can be array or string)
-            $startDateStr = is_array($this->startDate) ? ($this->startDate['date'] ?? null) : $this->startDate;
-            $endDateStr = is_array($this->endDate) ? ($this->endDate['date'] ?? null) : $this->endDate;
-
-            if (!$startDateStr || !$endDateStr) {
-                return [];
+        if ($this->dateMode === 'range') {
+            // Calculate start date based on option
+            if ($this->startDateOption === 'today') {
+                $start = new \DateTime('today');
+            } elseif ($this->startDateOption === 'tomorrow') {
+                $start = new \DateTime('tomorrow');
+            } else {
+                // Specific date
+                $startDateStr = is_array($this->startDate) ? ($this->startDate['date'] ?? null) : $this->startDate;
+                if (!$startDateStr && !$this->startDateString) {
+                    return [];
+                }
+                $start = new \DateTime($this->startDateString ?: $startDateStr);
             }
 
-            // Generate dates from range
-            $start = new \DateTime($startDateStr);
-            $end = new \DateTime($endDateStr);
+            // Calculate end date based on option
+            if ($this->endDateOption === 'specific') {
+                // Specific date
+                $endDateStr = is_array($this->endDate) ? ($this->endDate['date'] ?? null) : $this->endDate;
+                if (!$endDateStr && !$this->endDateString) {
+                    return [];
+                }
+                $end = new \DateTime($this->endDateString ?: $endDateStr);
+            } else {
+                // Relative date (+7, +14, +30, etc.)
+                $days = (int)str_replace('+', '', $this->endDateOption);
+                $end = (clone $start)->modify("+{$days} days");
+            }
             $interval = new \DateInterval('P1D');
             $period = new \DatePeriod($start, $interval, $end->modify('+1 day'));
 
@@ -696,13 +722,16 @@ class BookingSlot extends Field implements FieldInterface
                     <!-- Date Range Mode -->
                     <template v-else>
                         <div style="padding: 10px 20px; border: 2px solid #e5e7eb; border-radius: 6px; background: white; font-size: 14px; color: #374151;">
-                            ${ field.settings.startDateString || field.settings.startDate?.date || "Start Date" }
+                            <template v-if="field.settings.startDateOption === \'today\'">📅 Today</template>
+                            <template v-else-if="field.settings.startDateOption === \'tomorrow\'">📅 Tomorrow</template>
+                            <template v-else>${ field.settings.startDateString || "Start Date" }</template>
                         </div>
                         <div style="padding: 4px 8px; background: #e5e7eb; border-radius: 4px; font-size: 11px; color: #6b7280; align-self: center;">
                             to
                         </div>
                         <div style="padding: 10px 20px; border: 2px solid #2d5016; border-radius: 6px; background: #2d5016; color: white; font-size: 14px;">
-                            ${ field.settings.endDateString || field.settings.endDate?.date || "End Date" }
+                            <template v-if="field.settings.endDateOption === \'specific\'">${ field.settings.endDateString || "End Date" }</template>
+                            <template v-else>📅 ${ field.settings.endDateOption } days</template>
                         </div>
                     </template>
                 </div>
@@ -772,8 +801,12 @@ class BookingSlot extends Field implements FieldInterface
             'dateMode' => 'specific',
             'specificDates' => [],
             'specificDatesString' => '',
+            'startDateOption' => 'today',
             'startDate' => null,
+            'startDateString' => '',
+            'endDateOption' => '+30',
             'endDate' => null,
+            'endDateString' => '',
             'daysOfWeek' => [1, 2, 3, 4, 5], // Mon-Fri
             'blackoutDates' => [],
             'operatingHoursStart' => '09:00',
@@ -891,21 +924,46 @@ class BookingSlot extends Field implements FieldInterface
             ]),
 
             // Date Range Mode
-            SchemaHelper::textField([
+            SchemaHelper::selectField([
                 'label' => Craft::t('formie', 'Start Date'),
-                'help' => Craft::t('formie', 'Click to select the first date available for booking.'),
-                'name' => 'startDateString',
+                'help' => Craft::t('formie', 'Choose when bookings should start.'),
+                'name' => 'startDateOption',
                 'if' => '$get(dateMode).value == range',
-                'validation' => 'requiredIf:dateMode,range',
+                'options' => [
+                    ['label' => Craft::t('formie', 'Today'), 'value' => 'today'],
+                    ['label' => Craft::t('formie', 'Tomorrow'), 'value' => 'tomorrow'],
+                    ['label' => Craft::t('formie', 'Specific Date'), 'value' => 'specific'],
+                ],
+            ]),
+            SchemaHelper::textField([
+                'label' => Craft::t('formie', 'Specific Start Date'),
+                'help' => Craft::t('formie', 'Click to select the start date.'),
+                'name' => 'startDateString',
+                'if' => '$get(dateMode).value == range && $get(startDateOption).value == specific',
+                'validation' => 'requiredIf:startDateOption,specific',
                 'placeholder' => Craft::t('formie', 'Click to select start date...'),
                 'inputClass' => 'text fullwidth code fui-start-date-picker',
             ]),
-            SchemaHelper::textField([
+            SchemaHelper::selectField([
                 'label' => Craft::t('formie', 'End Date'),
-                'help' => Craft::t('formie', 'Click to select the last date available for booking.'),
-                'name' => 'endDateString',
+                'help' => Craft::t('formie', 'Choose when bookings should end.'),
+                'name' => 'endDateOption',
                 'if' => '$get(dateMode).value == range',
-                'validation' => 'requiredIf:dateMode,range',
+                'options' => [
+                    ['label' => Craft::t('formie', '+7 days'), 'value' => '+7'],
+                    ['label' => Craft::t('formie', '+14 days'), 'value' => '+14'],
+                    ['label' => Craft::t('formie', '+30 days'), 'value' => '+30'],
+                    ['label' => Craft::t('formie', '+60 days'), 'value' => '+60'],
+                    ['label' => Craft::t('formie', '+90 days'), 'value' => '+90'],
+                    ['label' => Craft::t('formie', 'Specific Date'), 'value' => 'specific'],
+                ],
+            ]),
+            SchemaHelper::textField([
+                'label' => Craft::t('formie', 'Specific End Date'),
+                'help' => Craft::t('formie', 'Click to select the end date.'),
+                'name' => 'endDateString',
+                'if' => '$get(dateMode).value == range && $get(endDateOption).value == specific',
+                'validation' => 'requiredIf:endDateOption,specific',
                 'placeholder' => Craft::t('formie', 'Click to select end date...'),
                 'inputClass' => 'text fullwidth code fui-end-date-picker',
             ]),
@@ -1134,8 +1192,10 @@ class BookingSlot extends Field implements FieldInterface
     {
         $attributes = parent::settingsAttributes();
         $attributes[] = 'dateMode';
+        $attributes[] = 'startDateOption';
         $attributes[] = 'startDate';
         $attributes[] = 'startDateString';
+        $attributes[] = 'endDateOption';
         $attributes[] = 'endDate';
         $attributes[] = 'endDateString';
         $attributes[] = 'specificDates';
