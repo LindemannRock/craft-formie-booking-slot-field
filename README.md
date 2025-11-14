@@ -6,7 +6,7 @@
 > **Use the [main branch](https://github.com/LindemannRock/craft-formie-booking-slot-field) for Craft 5 + Formie 3 instead.**
 > This branch will be **deprecated at any time** without notice.
 
-[![Latest Version](https://img.shields.io/packagist/v/lindemannrock/craft-formie-booking-slot-field.svg)](https://packagist.org/packages/lindemannrock/craft-formie-booking-slot-field)
+[![Version](https://img.shields.io/badge/version-2.x-red.svg)](https://github.com/LindemannRock/craft-formie-booking-slot-field/tree/craft4)
 [![Craft CMS](https://img.shields.io/badge/Craft%20CMS-4.0-orange.svg)](https://craftcms.com/)
 [![Formie](https://img.shields.io/badge/Formie-2.0-purple.svg)](https://verbb.io/craft-plugins/formie)
 [![PHP](https://img.shields.io/badge/PHP-8.0.2+-blue.svg)](https://php.net/)
