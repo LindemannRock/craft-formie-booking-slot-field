@@ -115,38 +115,14 @@ class Settings extends Model
     }
 
     /**
-     * Check if a setting is overridden by config file
+     * Check if a setting is overridden in config file
      *
-     * @param string $attribute The setting attribute name
+     * @param string $setting
      * @return bool
      */
-    public function isOverriddenByConfig(string $attribute): bool
+    public function isOverriddenByConfig(string $setting): bool
     {
-        $configPath = \Craft::$app->getPath()->getConfigPath() . '/formie-booking-slot-field.php';
-
-        if (!file_exists($configPath)) {
-            return false;
-        }
-
-        // Load the raw config file
-        $rawConfig = require $configPath;
-
-        // Check for the attribute in the config
-        if (array_key_exists($attribute, $rawConfig)) {
-            return true;
-        }
-
-        // Check environment-specific configs
-        $env = \Craft::$app->getConfig()->env;
-        if ($env && is_array($rawConfig[$env] ?? null) && array_key_exists($attribute, $rawConfig[$env])) {
-            return true;
-        }
-
-        // Check wildcard config
-        if (is_array($rawConfig['*'] ?? null) && array_key_exists($attribute, $rawConfig['*'])) {
-            return true;
-        }
-
-        return false;
+        $configFileSettings = \Craft::$app->getConfig()->getConfigFromFile('formie-booking-slot-field');
+        return isset($configFileSettings[$setting]);
     }
 }
