@@ -85,7 +85,41 @@ In the Control Panel, go to Settings → Plugins and click "Install" for Formie 
 
 ### Plugin Settings
 
-Navigate to **Settings → Plugins → Formie Booking Slot Field** to configure the plugin name.
+Navigate to **Settings → Plugins → Formie Booking Slot Field** to configure defaults for all booking fields:
+
+- **General Settings**: Plugin name
+- **Default Field Settings**: Display types, show capacity toggle
+- **Default Labels**: All text labels and placeholders
+- **Default Booking Configuration**: Operating hours, slot duration, capacity
+- **Default Formats**: Date and time display formats
+
+All settings can be overridden per field, or set globally in `config/formie-booking-slot-field.php`.
+
+### Config File
+
+Create `config/formie-booking-slot-field.php` to override settings:
+
+```bash
+cp vendor/lindemannrock/craft-formie-booking-slot-field/src/config.php config/formie-booking-slot-field.php
+```
+
+Example configuration:
+
+```php
+return [
+    '*' => [
+        'pluginName' => 'Bookings',
+        'defaultDateDisplayType' => 'select',
+        'defaultSlotDisplayType' => 'select',
+        'defaultOperatingHoursStart' => '09:00',
+        'defaultOperatingHoursEnd' => '17:00',
+        'defaultSlotDuration' => 60,
+        'defaultMaxCapacityPerSlot' => 10,
+    ],
+];
+```
+
+See [src/config.php](src/config.php) for all available options.
 
 ## Usage
 
@@ -103,7 +137,9 @@ Navigate to **Settings → Plugins → Formie Booking Slot Field** to configure 
   - Optional display labels (e.g., "December 5th, 2025")
 
 - **Date Range**: For ongoing bookings (e.g., next 30 days)
-  - Set start and end dates
+  - **Start Date**: Today, Tomorrow, or Specific Date
+  - **End Date**: +7, +14, +30, +60, +90 days, or Specific Date
+  - Creates rolling booking windows (updates daily)
   - Choose which days of week are available
   - Add blackout dates if needed
 
@@ -124,7 +160,12 @@ Navigate to **Settings → Plugins → Formie Booking Slot Field** to configure 
 - **Slot Display Type**: Radio buttons (visual) or Dropdown (compact)
 
 #### Appearance Tab
-- Label position, instructions, visibility settings
+- **Label Positions**: Main label, date label, slot label positioning
+- **Display Types**: Radio buttons or dropdowns for date/slots
+- **Formats**: Date and time display formats with live examples
+- **Show Remaining Capacity**: Toggle capacity display
+- **Instructions**: Field instructions and positioning
+- **Visibility**: Field visibility settings
 
 #### Advanced Tab
 - Handle, CSS classes, container attributes
@@ -143,18 +184,18 @@ Display: Dropdown
 Result: 12 slots (6 per day × 2 days), 192 total capacity
 ```
 
-#### Doctor Appointments
+#### Doctor Appointments (Rolling Window)
 ```
 Date Mode: Date Range
-Start: 2025-01-01
-End: 2025-01-31
+Start: Today (relative)
+End: +30 days (relative)
 Days: Mon-Fri
 Operating Hours: 09:00 - 17:00
 Slot Duration: 30 minutes
 Max Capacity: 1
 Display: Dropdown
 
-Result: 16 slots/day × ~22 weekdays = ~352 appointments
+Result: Rolling 30-day appointment window, updates daily automatically
 ```
 
 #### Workshop Series
