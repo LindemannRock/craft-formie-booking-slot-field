@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.1](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.3.0...v2.3.1) (2025-11-15)
+
+
+### Bug Fixes
+
+* add missing plugin-credit.twig template ([02e4aa6](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/02e4aa6f99e6335d7104fb325e7c47ff6531078f))
+
 ## [2.3.0](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.2.0...v2.3.0) (2025-11-15)
 
 
