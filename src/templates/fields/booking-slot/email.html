@@ -1,4 +1,4 @@
-{% if value %}
+{% if field.includeInEmail and value %}
     {% set dateVal = value.date ?? '' %}
     {% set slotVal = value.slot ?? '' %}
 
@@ -23,5 +23,12 @@
         {% endif %}
     {% endfor %}
 
-    <strong>{{ field.label }}:</strong> {{ dateLabel }} | {{ slotLabel }}
+    <p>
+        <strong>{{ field.dateSelectionLabel|t('formie') }}</strong><br>
+        {{ dateLabel }}
+    </p>
+    <p>
+        <strong>{{ field.slotSelectionLabel|t('formie') }}</strong><br>
+        {{ slotLabel }}
+    </p>
 {% endif %}

@@ -1,35 +1,271 @@
+{#
+ # Formie Booking Slot Field Settings
+ #
+ # @link      https://lindemannrock.com
+ # @copyright Copyright (c) 2025 LindemannRock
+ #}
+
 {% import "_includes/forms" as forms %}
 
-{{ forms.textField({
-    label: 'Plugin Name'|t('formie-booking-slot-field'),
-    instructions: 'The name of the plugin as it appears in the control panel.'|t('formie-booking-slot-field'),
-    id: 'pluginName',
-    name: 'pluginName',
-    value: settings.pluginName,
-    autofocus: true,
-}) }}
+<fieldset style="margin-top: 0;">
+	<h2>{{ 'General Settings'|t('formie-booking-slot-field') }}</h2>
+
+	{{ forms.textField({
+        label: 'Plugin Name'|t('formie-booking-slot-field'),
+        instructions: 'The public-facing name of the plugin'|t('formie-booking-slot-field'),
+        id: 'pluginName',
+        name: 'pluginName',
+        value: settings.pluginName ?? 'Formie Booking Slot Field',
+        placeholder: 'Formie Booking Slot Field',
+        autofocus: true,
+        warning: settings.isOverriddenByConfig('pluginName') ? 'This is being overridden by the `pluginName` setting in the `config/formie-booking-slot-field.php` file.'|t('formie-booking-slot-field'),
+        disabled: settings.isOverriddenByConfig('pluginName')
+    }) }}
+</fieldset>
 
 <hr>
 
-<div class="readable">
-    <h2>{{ 'About Booking Slot Field'|t('formie-booking-slot-field') }}</h2>
-    <p>{{ 'This plugin provides a custom Formie field for booking time slots with capacity tracking. Perfect for events, reservations, and appointments.'|t('formie-booking-slot-field') }}</p>
+<fieldset>
+	<h2>{{ 'Default Field Settings'|t('formie-booking-slot-field') }}</h2>
+	<p class="light">{{ 'These settings will be used as defaults when creating new booking slot fields.'|t('formie-booking-slot-field') }}</p>
 
-    <h3>{{ 'Features'|t('formie-booking-slot-field') }}</h3>
-    <ul>
-        <li>{{ 'Date selection with customizable available dates'|t('formie-booking-slot-field') }}</li>
-        <li>{{ 'Time slot configuration (start/end times)'|t('formie-booking-slot-field') }}</li>
-        <li>{{ 'Capacity tracking per slot'|t('formie-booking-slot-field') }}</li>
-        <li>{{ 'Real-time availability display'|t('formie-booking-slot-field') }}</li>
-        <li>{{ 'Fully responsive design'|t('formie-booking-slot-field') }}</li>
-    </ul>
+	{{ forms.selectField({
+        label: 'Default Date Display Type'|t('formie-booking-slot-field'),
+        instructions: 'How dates should be displayed by default'|t('formie-booking-slot-field'),
+        id: 'defaultDateDisplayType',
+        name: 'defaultDateDisplayType',
+        value: settings.defaultDateDisplayType ?? 'radio',
+        options: [
+            { value: 'radio', label: 'Buttons (Radio)'|t('formie-booking-slot-field') },
+            { value: 'select', label: 'Dropdown (Select)'|t('formie-booking-slot-field') }
+        ],
+        warning: settings.isOverriddenByConfig('defaultDateDisplayType') ? 'Overridden in config'|t('formie-booking-slot-field'),
+        disabled: settings.isOverriddenByConfig('defaultDateDisplayType')
+    }) }}
 
-    <h3>{{ 'Usage'|t('formie-booking-slot-field') }}</h3>
-    <ol>
-        <li>{{ 'Add a "Booking Slot" field to your Formie form'|t('formie-booking-slot-field') }}</li>
-        <li>{{ 'Configure available dates in the field settings'|t('formie-booking-slot-field') }}</li>
-        <li>{{ 'Define time slots with start/end times'|t('formie-booking-slot-field') }}</li>
-        <li>{{ 'Set maximum capacity per slot'|t('formie-booking-slot-field') }}</li>
-        <li>{{ 'Enable/disable remaining capacity display'|t('formie-booking-slot-field') }}</li>
-    </ol>
-</div>
+	{{ forms.selectField({
+        label: 'Default Slot Display Type'|t('formie-booking-slot-field'),
+        instructions: 'How time slots should be displayed by default'|t('formie-booking-slot-field'),
+        id: 'defaultSlotDisplayType',
+        name: 'defaultSlotDisplayType',
+        value: settings.defaultSlotDisplayType ?? 'radio',
+        options: [
+            { value: 'radio', label: 'Buttons (Radio)'|t('formie-booking-slot-field') },
+            { value: 'select', label: 'Dropdown (Select)'|t('formie-booking-slot-field') }
+        ],
+        warning: settings.isOverriddenByConfig('defaultSlotDisplayType') ? 'Overridden in config'|t('formie-booking-slot-field'),
+        disabled: settings.isOverriddenByConfig('defaultSlotDisplayType')
+    }) }}
+
+	{{ forms.lightswitchField({
+        label: 'Show Remaining Capacity'|t('formie-booking-slot-field'),
+        instructions: 'Display remaining spots by default'|t('formie-booking-slot-field'),
+        id: 'defaultShowRemainingCapacity',
+        name: 'defaultShowRemainingCapacity',
+        on: settings.defaultShowRemainingCapacity ?? true,
+        warning: settings.isOverriddenByConfig('defaultShowRemainingCapacity') ? 'Overridden in config'|t('formie-booking-slot-field'),
+        disabled: settings.isOverriddenByConfig('defaultShowRemainingCapacity')
+    }) }}
+</fieldset>
+
+<hr>
+
+<fieldset>
+	<h2>{{ 'Default Labels'|t('formie-booking-slot-field') }}</h2>
+	<p class="light">{{ 'Default labels and text for new booking slot fields.'|t('formie-booking-slot-field') }}</p>
+
+	{{ forms.textField({
+        label: 'Date Selection Label'|t('formie-booking-slot-field'),
+        instructions: 'Default label for date selection'|t('formie-booking-slot-field'),
+        id: 'defaultDateSelectionLabel',
+        name: 'defaultDateSelectionLabel',
+        value: settings.defaultDateSelectionLabel ?? 'Select Date',
+        placeholder: 'Select Date',
+        warning: settings.isOverriddenByConfig('defaultDateSelectionLabel') ? 'Overridden in config'|t('formie-booking-slot-field'),
+        disabled: settings.isOverriddenByConfig('defaultDateSelectionLabel')
+    }) }}
+
+	{{ forms.textField({
+        label: 'Slot Selection Label'|t('formie-booking-slot-field'),
+        instructions: 'Default label for time slot selection'|t('formie-booking-slot-field'),
+        id: 'defaultSlotSelectionLabel',
+        name: 'defaultSlotSelectionLabel',
+        value: settings.defaultSlotSelectionLabel ?? 'Select Time Slot',
+        placeholder: 'Select Time Slot',
+        warning: settings.isOverriddenByConfig('defaultSlotSelectionLabel') ? 'Overridden in config'|t('formie-booking-slot-field'),
+        disabled: settings.isOverriddenByConfig('defaultSlotSelectionLabel')
+    }) }}
+
+	{{ forms.textField({
+        label: 'Date Placeholder'|t('formie-booking-slot-field'),
+        instructions: 'Default placeholder for date dropdown'|t('formie-booking-slot-field'),
+        id: 'defaultDatePlaceholder',
+        name: 'defaultDatePlaceholder',
+        value: settings.defaultDatePlaceholder ?? 'Select a date...',
+        placeholder: 'Select a date...',
+        warning: settings.isOverriddenByConfig('defaultDatePlaceholder') ? 'Overridden in config'|t('formie-booking-slot-field'),
+        disabled: settings.isOverriddenByConfig('defaultDatePlaceholder')
+    }) }}
+
+	{{ forms.textField({
+        label: 'Slot Placeholder'|t('formie-booking-slot-field'),
+        instructions: 'Default placeholder for slot dropdown'|t('formie-booking-slot-field'),
+        id: 'defaultSlotPlaceholder',
+        name: 'defaultSlotPlaceholder',
+        value: settings.defaultSlotPlaceholder ?? 'Select a time slot...',
+        placeholder: 'Select a time slot...',
+        warning: settings.isOverriddenByConfig('defaultSlotPlaceholder') ? 'Overridden in config'|t('formie-booking-slot-field'),
+        disabled: settings.isOverriddenByConfig('defaultSlotPlaceholder')
+    }) }}
+
+	{{ forms.textField({
+        label: 'Capacity Text Template'|t('formie-booking-slot-field'),
+        instructions: 'Default template for capacity display (use {count} placeholder)'|t('formie-booking-slot-field'),
+        id: 'defaultCapacityTemplate',
+        name: 'defaultCapacityTemplate',
+        value: settings.defaultCapacityTemplate ?? '{count} spot(s) left',
+        placeholder: '{count} spot(s) left',
+        warning: settings.isOverriddenByConfig('defaultCapacityTemplate') ? 'Overridden in config'|t('formie-booking-slot-field'),
+        disabled: settings.isOverriddenByConfig('defaultCapacityTemplate')
+    }) }}
+
+	{{ forms.textField({
+        label: 'Fully Booked Text'|t('formie-booking-slot-field'),
+        instructions: 'Default text for fully booked slots'|t('formie-booking-slot-field'),
+        id: 'defaultFullyBookedText',
+        name: 'defaultFullyBookedText',
+        value: settings.defaultFullyBookedText ?? 'Fully Booked',
+        placeholder: 'Fully Booked',
+        warning: settings.isOverriddenByConfig('defaultFullyBookedText') ? 'Overridden in config'|t('formie-booking-slot-field'),
+        disabled: settings.isOverriddenByConfig('defaultFullyBookedText')
+    }) }}
+</fieldset>
+
+<hr>
+
+<fieldset>
+	<h2>{{ 'Default Booking Configuration'|t('formie-booking-slot-field') }}</h2>
+	<p class="light">{{ 'Default operating hours, slot duration, and capacity for new booking slot fields.'|t('formie-booking-slot-field') }}</p>
+
+	{% set timeOptions = [] %}
+	{% for hour in 0..23 %}
+		{% for minute in [0, 15, 30, 45] %}
+			{% set time = '%02d'|format(hour) ~ ':' ~ '%02d'|format(minute) %}
+			{% set timeOptions = timeOptions|merge([{ value: time, label: time }]) %}
+		{% endfor %}
+	{% endfor %}
+
+	{{ forms.selectField({
+        label: 'Operating Hours - Start'|t('formie-booking-slot-field'),
+        instructions: 'Default start time'|t('formie-booking-slot-field'),
+        id: 'defaultOperatingHoursStart',
+        name: 'defaultOperatingHoursStart',
+        value: settings.defaultOperatingHoursStart ?? '09:00',
+        options: timeOptions,
+        warning: settings.isOverriddenByConfig('defaultOperatingHoursStart') ? 'Overridden in config'|t('formie-booking-slot-field'),
+        disabled: settings.isOverriddenByConfig('defaultOperatingHoursStart')
+    }) }}
+
+	{{ forms.selectField({
+        label: 'Operating Hours - End'|t('formie-booking-slot-field'),
+        instructions: 'Default end time'|t('formie-booking-slot-field'),
+        id: 'defaultOperatingHoursEnd',
+        name: 'defaultOperatingHoursEnd',
+        value: settings.defaultOperatingHoursEnd ?? '17:00',
+        options: timeOptions,
+        warning: settings.isOverriddenByConfig('defaultOperatingHoursEnd') ? 'Overridden in config'|t('formie-booking-slot-field'),
+        disabled: settings.isOverriddenByConfig('defaultOperatingHoursEnd')
+    }) }}
+
+	{{ forms.selectField({
+        label: 'Slot Duration'|t('formie-booking-slot-field'),
+        instructions: 'Default slot duration'|t('formie-booking-slot-field'),
+        id: 'defaultSlotDuration',
+        name: 'defaultSlotDuration',
+        value: settings.defaultSlotDuration ?? 60,
+        options: [
+            { value: 15, label: '15 minutes' },
+            { value: 30, label: '30 minutes' },
+            { value: 45, label: '45 minutes' },
+            { value: 60, label: '1 hour' },
+            { value: 90, label: '1.5 hours' },
+            { value: 120, label: '2 hours' },
+            { value: 180, label: '3 hours' },
+            { value: 240, label: '4 hours' },
+        ],
+        warning: settings.isOverriddenByConfig('defaultSlotDuration') ? 'Overridden in config'|t('formie-booking-slot-field'),
+        disabled: settings.isOverriddenByConfig('defaultSlotDuration')
+    }) }}
+
+	{{ forms.textField({
+        label: 'Max Capacity Per Slot'|t('formie-booking-slot-field'),
+        instructions: 'Default maximum capacity per slot'|t('formie-booking-slot-field'),
+        id: 'defaultMaxCapacityPerSlot',
+        name: 'defaultMaxCapacityPerSlot',
+        type: 'number',
+        value: settings.defaultMaxCapacityPerSlot ?? 10,
+        placeholder: '10',
+        warning: settings.isOverriddenByConfig('defaultMaxCapacityPerSlot') ? 'Overridden in config'|t('formie-booking-slot-field'),
+        disabled: settings.isOverriddenByConfig('defaultMaxCapacityPerSlot')
+    }) }}
+</fieldset>
+
+<hr>
+
+<fieldset>
+	<h2>{{ 'Default Formats'|t('formie-booking-slot-field') }}</h2>
+	<p class="light">{{ 'Default date and time display formats for new booking slot fields.'|t('formie-booking-slot-field') }}</p>
+
+	{% set today = date() %}
+	{{ forms.selectField({
+        label: 'Date Format'|t('formie-booking-slot-field'),
+        instructions: 'Default date display format'|t('formie-booking-slot-field'),
+        id: 'defaultDateDisplayFormat',
+        name: 'defaultDateDisplayFormat',
+        value: settings.defaultDateDisplayFormat ?? 'F jS, Y',
+        options: [
+            { value: 'Y-m-d', label: 'YYYY-MM-DD (' ~ today|date('Y-m-d') ~ ')' },
+            { value: 'm-d-Y', label: 'MM-DD-YYYY (' ~ today|date('m-d-Y') ~ ')' },
+            { value: 'd-m-Y', label: 'DD-MM-YYYY (' ~ today|date('d-m-Y') ~ ')' },
+            { value: 'Y/m/d', label: 'YYYY/MM/DD (' ~ today|date('Y/m/d') ~ ')' },
+            { value: 'm/d/Y', label: 'MM/DD/YYYY (' ~ today|date('m/d/Y') ~ ')' },
+            { value: 'd/m/Y', label: 'DD/MM/YYYY (' ~ today|date('d/m/Y') ~ ')' },
+            { value: 'F jS, Y', label: 'Month Day, Year (' ~ today|date('F jS, Y') ~ ')' },
+            { value: 'M j, Y', label: 'Mon Day, Year (' ~ today|date('M j, Y') ~ ')' },
+        ],
+        warning: settings.isOverriddenByConfig('defaultDateDisplayFormat') ? 'Overridden in config'|t('formie-booking-slot-field'),
+        disabled: settings.isOverriddenByConfig('defaultDateDisplayFormat')
+    }) }}
+
+	{{ forms.selectField({
+        label: 'Time Format'|t('formie-booking-slot-field'),
+        instructions: 'Default time display format'|t('formie-booking-slot-field'),
+        id: 'defaultTimeDisplayFormat',
+        name: 'defaultTimeDisplayFormat',
+        value: settings.defaultTimeDisplayFormat ?? 'g:i A',
+        options: [
+            { value: 'H:i:s', label: '23:59:59 (HH:MM:SS)' },
+            { value: 'h:i:s A', label: '03:59:59 PM (H:MM:SS AM/PM)' },
+            { value: 'H:i', label: '23:59 (HH:MM)' },
+            { value: 'h:i A', label: '03:59 PM (H:MM AM/PM)' },
+            { value: 'g:i A', label: '3:59 PM (H:MM AM/PM)' },
+        ],
+        warning: settings.isOverriddenByConfig('defaultTimeDisplayFormat') ? 'Overridden in config'|t('formie-booking-slot-field'),
+        disabled: settings.isOverriddenByConfig('defaultTimeDisplayFormat')
+    }) }}
+</fieldset>
+
+<hr>
+
+<fieldset>
+	<div class="readable">
+		<h2>{{ 'About Formie Booking Slot Field'|t('formie-booking-slot-field') }}</h2>
+		<p>{{ 'Add booking and appointment scheduling to your forms with flexible date/time slot selection and automatic capacity tracking.'|t('formie-booking-slot-field') }}</p>
+
+		<p><strong>{{ 'Perfect for:'|t('formie-booking-slot-field') }}</strong> {{ 'Events, appointments, workshops, reservations, and any scenario requiring time slot booking with capacity management.'|t('formie-booking-slot-field') }}</p>
+
+		<p>{{ 'Configure specific dates or rolling date ranges, set operating hours, define slot duration, and track capacity automatically. Fully translatable and customizable for any use case.'|t('formie-booking-slot-field') }}</p>
+	</div>
+</fieldset>
+
+{% include 'formie-booking-slot-field/_components/plugin-credit.twig' %}

@@ -295,6 +295,59 @@ class BookingSlot extends Field implements FieldInterface
         } elseif ($this->endDate && !$this->endDateString) {
             $this->endDateString = is_array($this->endDate) ? ($this->endDate['date'] ?? '') : $this->endDate;
         }
+
+        // Apply plugin default settings if properties are not set
+        $plugin = FormieBookingSlotField::$plugin;
+        if ($plugin) {
+            $settings = $plugin->getSettings();
+            if ($settings) {
+                if ($this->dateDisplayType === 'radio') {
+                    $this->dateDisplayType = $settings->defaultDateDisplayType ?? 'radio';
+                }
+                if ($this->slotDisplayType === 'radio') {
+                    $this->slotDisplayType = $settings->defaultSlotDisplayType ?? 'radio';
+                }
+                if ($this->showRemainingCapacity === true) {
+                    $this->showRemainingCapacity = $settings->defaultShowRemainingCapacity ?? true;
+                }
+                if ($this->dateSelectionLabel === 'Select Date') {
+                    $this->dateSelectionLabel = $settings->defaultDateSelectionLabel ?? 'Select Date';
+                }
+                if ($this->slotSelectionLabel === 'Select Time Slot') {
+                    $this->slotSelectionLabel = $settings->defaultSlotSelectionLabel ?? 'Select Time Slot';
+                }
+                if ($this->datePlaceholder === 'Select a date...') {
+                    $this->datePlaceholder = $settings->defaultDatePlaceholder ?? 'Select a date...';
+                }
+                if ($this->slotPlaceholder === 'Select a time slot...') {
+                    $this->slotPlaceholder = $settings->defaultSlotPlaceholder ?? 'Select a time slot...';
+                }
+                if ($this->capacityTemplate === '{count} spot(s) left') {
+                    $this->capacityTemplate = $settings->defaultCapacityTemplate ?? '{count} spot(s) left';
+                }
+                if ($this->fullyBookedText === 'Fully Booked') {
+                    $this->fullyBookedText = $settings->defaultFullyBookedText ?? 'Fully Booked';
+                }
+                if ($this->operatingHoursStart === '09:00') {
+                    $this->operatingHoursStart = $settings->defaultOperatingHoursStart ?? '09:00';
+                }
+                if ($this->operatingHoursEnd === '17:00') {
+                    $this->operatingHoursEnd = $settings->defaultOperatingHoursEnd ?? '17:00';
+                }
+                if ($this->slotDuration === 60) {
+                    $this->slotDuration = $settings->defaultSlotDuration ?? 60;
+                }
+                if ($this->maxCapacityPerSlot === 10) {
+                    $this->maxCapacityPerSlot = $settings->defaultMaxCapacityPerSlot ?? 10;
+                }
+                if ($this->dateDisplayFormat === 'F jS, Y') {
+                    $this->dateDisplayFormat = $settings->defaultDateDisplayFormat ?? 'F jS, Y';
+                }
+                if ($this->timeDisplayFormat === 'g:i A') {
+                    $this->timeDisplayFormat = $settings->defaultTimeDisplayFormat ?? 'g:i A';
+                }
+            }
+        }
     }
 
     /**
@@ -604,40 +657,61 @@ class BookingSlot extends Field implements FieldInterface
      */
     protected function cpInputHtml(mixed $value, ?ElementInterface $element, bool $inline): string
     {
-        $displayValue = '';
+        $currentDate = is_array($value) ? ($value['date'] ?? '') : '';
+        $currentSlot = is_array($value) ? ($value['slot'] ?? '') : '';
 
-        if (is_array($value)) {
-            $date = $value['date'] ?? '';
-            $slot = $value['slot'] ?? '';
+        $availableDates = $this->getAvailableDates();
+        $timeSlots = $this->getTimeSlots();
+        $availability = $this->getSlotAvailability();
 
-            $availableDates = $this->getAvailableDates();
-            $timeSlots = $this->getTimeSlots();
+        $html = '<div class="fui-booking-slot-cp-input" style="display: flex; flex-direction: column; gap: 16px;">';
 
-            // Find date label
-            $dateLabel = $date;
-            foreach ($availableDates as $dateConfig) {
-                if (($dateConfig['date'] ?? $dateConfig) === $date) {
-                    $dateLabel = $dateConfig['label'] ?? $date;
-                    break;
-                }
-            }
-
-            // Find slot label
-            $slotLabel = $slot;
-            foreach ($timeSlots as $slotConfig) {
-                $slotKey = $slotConfig['startTime'] . '-' . $slotConfig['endTime'];
-                if ($slotKey === $slot) {
-                    $slotLabel = $slotConfig['label'] ?? $slot;
-                    break;
-                }
-            }
-
-            $displayValue = $dateLabel . ' | ' . $slotLabel;
+        // Date dropdown
+        $html .= '<div>';
+        $html .= '<label style="display: block; font-weight: 600; margin-bottom: 8px;">Date</label>';
+        $html .= '<div class="select"><select name="' . $this->handle . '[date]" id="' . $this->handle . '-date">';
+        $html .= '<option value="">Select a date...</option>';
+        foreach ($availableDates as $dateConfig) {
+            $dateVal = $dateConfig['date'] ?? $dateConfig;
+            $dateLabel = $dateConfig['label'] ?? $dateVal;
+            $selected = $dateVal === $currentDate ? ' selected' : '';
+            $html .= '<option value="' . htmlspecialchars($dateVal) . '"' . $selected . '>' . htmlspecialchars($dateLabel) . '</option>';
         }
+        $html .= '</select></div>';
+        $html .= '</div>';
 
-        return '<div class="fui-booking-slot-display" style="padding: 10px; background: #f7f7f7; border-radius: 4px;">' .
-               '<strong>Booking:</strong> ' . htmlspecialchars($displayValue ?: 'No slot selected') .
-               '</div>';
+        // Slot dropdown
+        $html .= '<div>';
+        $html .= '<label style="display: block; font-weight: 600; margin-bottom: 8px;">Time Slot</label>';
+        $html .= '<div class="select"><select name="' . $this->handle . '[slot]" id="' . $this->handle . '-slot">';
+        $html .= '<option value="">Select a time slot...</option>';
+        foreach ($timeSlots as $slotConfig) {
+            $slotKey = $slotConfig['startTime'] . '-' . $slotConfig['endTime'];
+            $slotLabel = $slotConfig['label'] ?? $slotKey;
+            $selected = $slotKey === $currentSlot ? ' selected' : '';
+
+            // Check availability for the current date (or first date if no date selected)
+            $checkDate = $currentDate ?: (isset($availableDates[0]) ? ($availableDates[0]['date'] ?? '') : '');
+            $remaining = 0;
+            $isFull = false;
+
+            if ($checkDate && isset($availability[$checkDate][$slotKey])) {
+                $remaining = $availability[$checkDate][$slotKey]['remaining'];
+                $isFull = $availability[$checkDate][$slotKey]['isFull'];
+            }
+
+            $disabled = $isFull ? ' disabled' : '';
+            $capacityText = $isFull ? ' (Fully Booked)' : ($this->showRemainingCapacity ? " ({$remaining} spots left)" : '');
+            $label = $slotLabel . $capacityText;
+
+            $html .= '<option value="' . htmlspecialchars($slotKey) . '"' . $selected . $disabled . '>' . htmlspecialchars($label) . '</option>';
+        }
+        $html .= '</select></div>';
+        $html .= '</div>';
+
+        $html .= '</div>';
+
+        return $html;
     }
 
     /**
@@ -800,7 +874,7 @@ class BookingSlot extends Field implements FieldInterface
      */
     public function getFieldDefaults(): array
     {
-        return [
+        $defaults = [
             'dateMode' => 'specific',
             'specificDates' => [],
             'specificDatesString' => '',
@@ -830,6 +904,30 @@ class BookingSlot extends Field implements FieldInterface
             'dateDisplayFormat' => 'F jS, Y',
             'timeDisplayFormat' => 'g:i A',
         ];
+
+        $plugin = FormieBookingSlotField::$plugin;
+        if ($plugin) {
+            $settings = $plugin->getSettings();
+            if ($settings) {
+                $defaults['operatingHoursStart'] = $settings->defaultOperatingHoursStart ?? '09:00';
+                $defaults['operatingHoursEnd'] = $settings->defaultOperatingHoursEnd ?? '17:00';
+                $defaults['slotDuration'] = $settings->defaultSlotDuration ?? 60;
+                $defaults['maxCapacityPerSlot'] = $settings->defaultMaxCapacityPerSlot ?? 10;
+                $defaults['showRemainingCapacity'] = $settings->defaultShowRemainingCapacity ?? true;
+                $defaults['dateDisplayType'] = $settings->defaultDateDisplayType ?? 'radio';
+                $defaults['slotDisplayType'] = $settings->defaultSlotDisplayType ?? 'radio';
+                $defaults['dateSelectionLabel'] = $settings->defaultDateSelectionLabel ?? 'Select Date';
+                $defaults['slotSelectionLabel'] = $settings->defaultSlotSelectionLabel ?? 'Select Time Slot';
+                $defaults['datePlaceholder'] = $settings->defaultDatePlaceholder ?? 'Select a date...';
+                $defaults['slotPlaceholder'] = $settings->defaultSlotPlaceholder ?? 'Select a time slot...';
+                $defaults['capacityTemplate'] = $settings->defaultCapacityTemplate ?? '{count} spot(s) left';
+                $defaults['fullyBookedText'] = $settings->defaultFullyBookedText ?? 'Fully Booked';
+                $defaults['dateDisplayFormat'] = $settings->defaultDateDisplayFormat ?? 'F jS, Y';
+                $defaults['timeDisplayFormat'] = $settings->defaultTimeDisplayFormat ?? 'g:i A';
+            }
+        }
+
+        return $defaults;
     }
 
     /**
