@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.2.0...v2.3.0) (2025-11-15)
+
+
+### Features
+
+* add plugin settings and improve CP/email (ported from main) ([08e2405](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/08e2405d5b734546f285a3214ead9ead4d64c5e5))
+
 ## [2.2.0](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.1.0...v2.2.0) (2025-11-14)
 
 
