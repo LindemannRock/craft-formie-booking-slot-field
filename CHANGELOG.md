@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.2](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.3.1...v2.3.2) (2025-11-15)
+
+
+### Bug Fixes
+
+* update getFieldDefaults to use plugin settings ([0296707](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/02967072d7f69ac478f17e27582d2456c23f9ec6))
+
 ## [2.3.1](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.3.0...v2.3.1) (2025-11-15)
 
 
