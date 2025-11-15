@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.4.0](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v3.3.0...v3.4.0) (2025-11-15)
+
+
+### Features
+
+* add comprehensive plugin settings and improve CP/email templates ([6f4859e](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/6f4859e6b4f38aa139cf4ff502f68e690fd0fe56))
+* add config file and standardize template extensions ([7158eb9](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/7158eb9c4660faf76084ae8c5f3ea4fa6323c0d6))
+* add MIT License file ([2ebad4b](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/2ebad4b2bae401b6be67b0455b44dde122c89c9c))
+
 ## [3.3.0](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v3.2.0...v3.3.0) (2025-11-14)
 
 

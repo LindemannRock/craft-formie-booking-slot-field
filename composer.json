@@ -2,7 +2,7 @@
     "name": "lindemannrock/craft-formie-booking-slot-field",
     "description": "Booking slot field for Formie - Provides date and time slot selection with capacity tracking for Craft CMS Formie plugin",
     "type": "craft-plugin",
-    "version": "3.3.0",
+    "version": "3.4.0",
     "keywords": [
         "craft",
         "cms",
