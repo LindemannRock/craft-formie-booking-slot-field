@@ -848,6 +848,9 @@ class BookingSlot extends FormField implements FormFieldInterface
      */
     public function getFieldDefaults(): array
     {
+        $plugin = FormieBookingSlotField::$plugin;
+        $settings = $plugin ? $plugin->getSettings() : null;
+
         return [
             'dateMode' => 'specific',
             'specificDates' => [],
@@ -860,23 +863,23 @@ class BookingSlot extends FormField implements FormFieldInterface
             'endDateString' => '',
             'daysOfWeek' => [1, 2, 3, 4, 5], // Mon-Fri
             'blackoutDates' => [],
-            'operatingHoursStart' => '09:00',
-            'operatingHoursEnd' => '17:00',
-            'slotDuration' => 60,
-            'maxCapacityPerSlot' => 10,
-            'showRemainingCapacity' => true,
-            'dateDisplayType' => 'radio',
-            'slotDisplayType' => 'radio',
-            'dateSelectionLabel' => 'Select Date',
+            'operatingHoursStart' => $settings->defaultOperatingHoursStart ?? '09:00',
+            'operatingHoursEnd' => $settings->defaultOperatingHoursEnd ?? '17:00',
+            'slotDuration' => $settings->defaultSlotDuration ?? 60,
+            'maxCapacityPerSlot' => $settings->defaultMaxCapacityPerSlot ?? 10,
+            'showRemainingCapacity' => $settings->defaultShowRemainingCapacity ?? true,
+            'dateDisplayType' => $settings->defaultDateDisplayType ?? 'radio',
+            'slotDisplayType' => $settings->defaultSlotDisplayType ?? 'radio',
+            'dateSelectionLabel' => $settings->defaultDateSelectionLabel ?? 'Select Date',
             'dateSelectionLabelPosition' => '',
-            'slotSelectionLabel' => 'Select Time Slot',
+            'slotSelectionLabel' => $settings->defaultSlotSelectionLabel ?? 'Select Time Slot',
             'slotSelectionLabelPosition' => '',
-            'datePlaceholder' => 'Select a date...',
-            'slotPlaceholder' => 'Select a time slot...',
-            'capacityTemplate' => '{count} spot(s) left',
-            'fullyBookedText' => 'Fully Booked',
-            'dateDisplayFormat' => 'F jS, Y',
-            'timeDisplayFormat' => 'g:i A',
+            'datePlaceholder' => $settings->defaultDatePlaceholder ?? 'Select a date...',
+            'slotPlaceholder' => $settings->defaultSlotPlaceholder ?? 'Select a time slot...',
+            'capacityTemplate' => $settings->defaultCapacityTemplate ?? '{count} spot(s) left',
+            'fullyBookedText' => $settings->defaultFullyBookedText ?? 'Fully Booked',
+            'dateDisplayFormat' => $settings->defaultDateDisplayFormat ?? 'F jS, Y',
+            'timeDisplayFormat' => $settings->defaultTimeDisplayFormat ?? 'g:i A',
         ];
     }
 
