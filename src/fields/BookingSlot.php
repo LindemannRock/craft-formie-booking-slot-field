@@ -1083,17 +1083,35 @@ class BookingSlot extends FormField implements FormFieldInterface
                 'name' => 'fullyBookedText',
                 'placeholder' => 'Fully Booked',
             ]),
-            SchemaHelper::textField([
-                'label' => Craft::t('formie', 'Date Display Format'),
-                'help' => Craft::t('formie', 'PHP date format (e.g., F jS, Y or Y-m-d). <a href="https://www.php.net/manual/en/datetime.format.php" target="_blank">View format reference</a>'),
+            SchemaHelper::selectField([
+                'label' => Craft::t('formie', 'Date Format'),
+                'help' => Craft::t('formie', 'How dates should be formatted for display.'),
                 'name' => 'dateDisplayFormat',
-                'placeholder' => 'F jS, Y',
+                'options' => [
+                    ['label' => 'YYYY-MM-DD (' . date('Y-m-d') . ')', 'value' => 'Y-m-d'],
+                    ['label' => 'MM-DD-YYYY (' . date('m-d-Y') . ')', 'value' => 'm-d-Y'],
+                    ['label' => 'DD-MM-YYYY (' . date('d-m-Y') . ')', 'value' => 'd-m-Y'],
+                    ['label' => 'YYYY/MM/DD (' . date('Y/m/d') . ')', 'value' => 'Y/m/d'],
+                    ['label' => 'MM/DD/YYYY (' . date('m/d/Y') . ')', 'value' => 'm/d/Y'],
+                    ['label' => 'DD/MM/YYYY (' . date('d/m/Y') . ')', 'value' => 'd/m/Y'],
+                    ['label' => 'YYYY.MM.DD (' . date('Y.m.d') . ')', 'value' => 'Y.m.d'],
+                    ['label' => 'MM.DD.YYYY (' . date('m.d.Y') . ')', 'value' => 'm.d.Y'],
+                    ['label' => 'DD.MM.YYYY (' . date('d.m.Y') . ')', 'value' => 'd.m.Y'],
+                    ['label' => 'Month Day, Year (' . date('F jS, Y') . ')', 'value' => 'F jS, Y'],
+                    ['label' => 'Mon Day, Year (' . date('M j, Y') . ')', 'value' => 'M j, Y'],
+                ],
             ]),
-            SchemaHelper::textField([
-                'label' => Craft::t('formie', 'Time Display Format'),
-                'help' => Craft::t('formie', 'PHP time format (e.g., g:i A or H:i). <a href="https://www.php.net/manual/en/datetime.format.php" target="_blank">View format reference</a>'),
+            SchemaHelper::selectField([
+                'label' => Craft::t('formie', 'Time Format'),
+                'help' => Craft::t('formie', 'How times should be formatted for display.'),
                 'name' => 'timeDisplayFormat',
-                'placeholder' => 'g:i A',
+                'options' => [
+                    ['label' => '23:59:59 (HH:MM:SS)', 'value' => 'H:i:s'],
+                    ['label' => '03:59:59 PM (H:MM:SS AM/PM)', 'value' => 'h:i:s A'],
+                    ['label' => '23:59 (HH:MM)', 'value' => 'H:i'],
+                    ['label' => '03:59 PM (H:MM AM/PM)', 'value' => 'h:i A'],
+                    ['label' => '3:59 PM (H:MM AM/PM)', 'value' => 'g:i A'],
+                ],
             ]),
         ];
     }
