@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.3](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.3.2...v2.3.3) (2025-11-15)
+
+
+### Bug Fixes
+
+* update format fields to dropdowns in General schema ([72c2b69](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/72c2b69fff3dca1a25e155e326c3007524a6f420))
+
 ## [2.3.2](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.3.1...v2.3.2) (2025-11-15)
 
 
