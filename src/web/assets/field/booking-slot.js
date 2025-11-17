@@ -134,15 +134,15 @@ window.FormieBookingSlot = class FormieBookingSlot {
                     const slotInfo = this.settings.timeSlots.find(s => `${s.startTime}-${s.endTime}` === slotKey);
                     const slotLabel = slotInfo ? slotInfo.label : slotKey;
 
-                    // Update text with capacity (reversed for RTL: capacity - time)
+                    // Update text: TIME - CAPACITY (select has dir="ltr" to handle RTL)
                     if (this.settings.showRemainingCapacity) {
                         if (isFull) {
                             const fullyBookedText = this.settings.fullyBookedText || 'Fully Booked';
-                            option.textContent = `${fullyBookedText} - ${slotLabel}`;
+                            option.textContent = `${slotLabel} - ${fullyBookedText}`;
                         } else {
                             const template = this.settings.capacityTemplate || '{count} spot(s) left';
                             const capacityText = template.replace('{count}', remaining);
-                            option.textContent = `${capacityText} - ${slotLabel}`;
+                            option.textContent = `${slotLabel} - ${capacityText}`;
                         }
                     } else {
                         option.textContent = slotLabel;
