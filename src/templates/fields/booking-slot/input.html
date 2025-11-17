@@ -8,6 +8,7 @@
 {% set availableDates = field.getAvailableDates() %}
 {% set timeSlots = field.getTimeSlots() %}
 
+<fieldset>
 <div class="fui-booking-slot-wrapper" data-fui-booking-slot>
     {# Date Selection #}
     {% set datePosition = field.dateSelectionLabelPosition is not empty ? field.dateSelectionLabelPosition : form.settings.defaultLabelPosition %}
@@ -19,7 +20,7 @@
 
     <div class="fui-booking-dates {{ dateLabelLeft or dateLabelRight ? 'flex items-center gap-4' }} {{ dateLabelRight ? 'flex-row-reverse' }}" data-booking-dates>
         {% if showDateLabel and (dateLabelAbove or dateLabelLeft or dateLabelRight) %}
-            <label class="fui-booking-label {{ dateLabelLeft or dateLabelRight ? 'flex-shrink-0 mb-0' }}">{{ field.dateSelectionLabel|t('formie') }}</label>
+            <label class="fui-booking-label lr-mb-2 lr-block lr-text-md lr-font-medium lr-text-gray-700 {{ dateLabelLeft or dateLabelRight ? 'flex-shrink-0 mb-0' }}">{{ field.dateSelectionLabel|t('formie') }}{% if field.required %}&nbsp;<span class="lr-text-red-500" aria-hidden="true">*</span>{% endif %}</label>
         {% endif %}
 
         <div class="{{ dateLabelLeft or dateLabelRight ? 'flex-1' }}">
@@ -30,7 +31,7 @@
                 name="{{ name }}[date]"
                 {% if field.required %}required{% endif %}
                 data-date-input
-                class="fui-select"
+                class="fui-select lr-shadow-sm lr-block lr-w-full lr-border-secondary-600"
             >
                 <option value="">{{ field.datePlaceholder|t('formie') }}</option>
                 {% for dateConfig in availableDates %}
@@ -66,7 +67,7 @@
         </div>
 
         {% if showDateLabel and dateLabelBelow %}
-            <label class="fui-booking-label mt-2">{{ field.dateSelectionLabel|t('formie') }}</label>
+            <label class="fui-booking-label mt-2">{{ field.dateSelectionLabel|t('formie') }}{% if field.required %}&nbsp;<span class="lr-text-red-500" aria-hidden="true">*</span>{% endif %}</label>
         {% endif %}
     </div>
 
@@ -80,7 +81,7 @@
 
     <div class="fui-booking-slots {{ slotLabelLeft or slotLabelRight ? 'flex items-center gap-4' }} {{ slotLabelRight ? 'flex-row-reverse' }} {% if not dateValue %}is-disabled{% endif %}" data-booking-slots>
         {% if showSlotLabel and (slotLabelAbove or slotLabelLeft or slotLabelRight) %}
-            <label class="fui-booking-label {{ slotLabelLeft or slotLabelRight ? 'flex-shrink-0 mb-0' }}">{{ field.slotSelectionLabel|t('formie') }}</label>
+            <label class="fui-booking-label lr-mb-2 lr-block lr-text-md lr-font-medium lr-text-gray-700 {{ slotLabelLeft or slotLabelRight ? 'flex-shrink-0 mb-0' }}">{{ field.slotSelectionLabel|t('formie') }}{% if field.required %}&nbsp;<span class="lr-text-red-500" aria-hidden="true">*</span>{% endif %}</label>
         {% endif %}
 
         <div class="{{ slotLabelLeft or slotLabelRight ? 'flex-1' }}">
@@ -91,7 +92,7 @@
                 name="{{ name }}[slot]"
                 {% if field.required %}required{% endif %}
                 data-slot-input
-                class="fui-select"
+                class="fui-select lr-shadow-sm lr-block lr-w-full lr-border-secondary-600"
             >
                 <option value="">{{ field.slotPlaceholder|t('formie') }}</option>
                 {% for slotConfig in timeSlots %}
@@ -157,7 +158,7 @@
         </div>
 
         {% if showSlotLabel and slotLabelBelow %}
-            <label class="fui-booking-label mt-2">{{ field.slotSelectionLabel|t('formie') }}</label>
+            <label class="fui-booking-label mt-2">{{ field.slotSelectionLabel|t('formie') }}{% if field.required %}&nbsp;<span class="lr-text-red-500" aria-hidden="true">*</span>{% endif %}</label>
         {% endif %}
     </div>
 </div>
