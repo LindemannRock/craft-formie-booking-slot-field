@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.4](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.4.3...v2.4.4) (2025-11-17)
+
+
+### Bug Fixes
+
+* update JavaScript to handle RTL capacity order ([0e5783f](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/0e5783fa1cdba4eb871591e403b6ba5a02c4581c))
+
 ## [2.4.3](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.4.2...v2.4.3) (2025-11-17)
 
 
