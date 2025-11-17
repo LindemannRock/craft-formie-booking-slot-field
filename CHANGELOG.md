@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.2](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.4.1...v2.4.2) (2025-11-17)
+
+
+### Bug Fixes
+
+* use FSI/PDI Unicode isolates for RTL text ([8cee9be](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/8cee9be8a561a24f42c439916892aecb2c1e8f81))
+
 ## [2.4.1](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.4.0...v2.4.1) (2025-11-17)
 
 
