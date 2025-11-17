@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.3](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.4.2...v2.4.3) (2025-11-17)
+
+
+### Bug Fixes
+
+* reverse option order and force LTR select for RTL ([3b3de68](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/3b3de687543641cd2daa2b008a2c033ff29a108b))
+
 ## [2.4.2](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.4.1...v2.4.2) (2025-11-17)
 
 
