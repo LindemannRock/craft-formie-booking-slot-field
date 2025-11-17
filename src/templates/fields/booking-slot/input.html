@@ -93,6 +93,7 @@
                 {% if field.required %}required{% endif %}
                 data-slot-input
                 class="lr-shadow-sm lr-block lr-w-full lr-border-secondary-600"
+                dir="ltr"
             >
                 <option value="">{{ field.slotPlaceholder|t('formie') }}</option>
                 {% for slotConfig in timeSlots %}
@@ -108,10 +109,9 @@
                         data-slot-key="{{ slotKey }}"
                         data-remaining="{{ remaining }}"
                     >
-                        {{ slotLabel }}
                         {% if field.showRemainingCapacity %}
-                            &#8206;- &#8237;{% if isFull %}{{ field.fullyBookedText|t('formie') }}{% else %}{{ field.capacityTemplate|t('formie')|replace('{count}', remaining) }}{% endif %}&#8238;
-                        {% endif %}
+                            {% if isFull %}{{ field.fullyBookedText|t('formie') }}{% else %}{{ field.capacityTemplate|t('formie')|replace('{count}', remaining) }}{% endif %} - &lrm;
+                        {% endif %}{{ slotLabel }}&lrm;
                     </option>
                 {% endfor %}
             </select>
