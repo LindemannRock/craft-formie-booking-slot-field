@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.5](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.4.4...v2.4.5) (2025-11-17)
+
+
+### Bug Fixes
+
+* get full slot label from settings in JavaScript ([d403178](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/d40317838360f045ffc5f8286ce779ba9a8848e9))
+
 ## [2.4.4](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.4.3...v2.4.4) (2025-11-17)
 
 
