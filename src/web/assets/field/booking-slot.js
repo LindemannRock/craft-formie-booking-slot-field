@@ -131,16 +131,21 @@ window.FormieBookingSlot = class FormieBookingSlot {
                     option.setAttribute('data-remaining', remaining);
 
                     // Update the option text to show correct capacity
-                    const originalText = option.textContent.split(' - ')[0]; // Get time label part
+                    // For RTL, format is: capacity - time (reversed)
+                    const parts = option.textContent.split(' - ');
+                    const timeText = parts[parts.length - 1].trim(); // Get last part (time)
+
                     if (this.settings.showRemainingCapacity) {
                         if (isFull) {
                             const fullyBookedText = this.settings.fullyBookedText || 'Fully Booked';
-                            option.textContent = `${originalText} - ${fullyBookedText}`;
+                            option.textContent = `${fullyBookedText} - ${timeText}`;
                         } else {
                             const template = this.settings.capacityTemplate || '{count} spot(s) left';
                             const capacityText = template.replace('{count}', remaining);
-                            option.textContent = `${originalText} - ${capacityText}`;
+                            option.textContent = `${capacityText} - ${timeText}`;
                         }
+                    } else {
+                        option.textContent = timeText;
                     }
                 }
             });
