@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.6](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.4.5...v2.4.6) (2025-11-17)
+
+
+### Bug Fixes
+
+* use dir='ltr' on select for proper RTL handling ([a685e4b](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/a685e4b11329c933c626165ac7989a0a6676b1f2))
+
 ## [2.4.5](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.4.4...v2.4.5) (2025-11-17)
 
 
