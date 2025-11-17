@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.4.0](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.3.3...v2.4.0) (2025-11-17)
+
+
+### Features
+
+* add required markers to sub-field labels ([0667c8e](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/0667c8e90f10807dc44741c6ce9ee6a81603d988))
+
+
+### Bug Fixes
+
+* add LTR marks to prevent Arabic text reordering ([c09cf98](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/c09cf98a18fd46d0819008e18eac2dd9cf761ab7))
+
 ## [2.3.3](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.3.2...v2.3.3) (2025-11-15)
 
 
