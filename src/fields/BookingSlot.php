@@ -772,6 +772,14 @@ class BookingSlot extends FormField implements FormFieldInterface
     /**
      * @inheritdoc
      */
+    public function getValueForExport($value, ElementInterface $element = null): string
+    {
+        return $this->getValueAsString($value, $element);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public static function getFrontEndInputTemplatePath(): string
     {
         return 'formie-booking-slot-field/fields/booking-slot/input';
