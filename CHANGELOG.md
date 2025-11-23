@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.0](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.5.0...v2.6.0) (2025-11-23)
+
+
+### Features
+
+* add export functionality for BookingSlot field with date and time columns ([364731d](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/364731ddd1c2b353a9e34c14c6984cb78bc1155e))
+
 ## [2.5.0](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.4.6...v2.5.0) (2025-11-23)
 
 
