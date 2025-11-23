@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.0](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.4.6...v2.5.0) (2025-11-23)
+
+
+### Features
+
+* add getValueForExport method for BookingSlot field ([515ecad](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/515ecad20aaada774cb0fa99fb9d4bd024fb7d89))
+
 ## [2.4.6](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.4.5...v2.4.6) (2025-11-17)
 
 
