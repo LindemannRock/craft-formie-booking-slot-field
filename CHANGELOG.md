@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.1](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.6.0...v2.6.1) (2025-11-23)
+
+
+### Code Refactoring
+
+* remove export label and column definitions from BookingSlot field ([58be994](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/58be994f83b3c18726bf4d10ab28f71734aa0a88))
+
 ## [2.6.0](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.5.0...v2.6.0) (2025-11-23)
 
 
