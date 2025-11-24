@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.1](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.9.0...v2.9.1) (2025-11-24)
+
+
+### Bug Fixes
+
+* improve form ID and field handle retrieval in refreshCapacityFromServer ([bd26f23](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/bd26f23899568c92ab5b1595f40c3f1c30db03bf))
+
 ## [2.9.0](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.8.0...v2.9.0) (2025-11-24)
 
 
