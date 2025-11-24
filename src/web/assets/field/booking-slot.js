@@ -37,6 +37,49 @@ window.FormieBookingSlot = class FormieBookingSlot {
         // Setup event listeners
         this.setupDateSelection($wrapper);
         this.setupSlotSelection($wrapper);
+
+        // Setup validation to check capacity before submission
+        this.setupValidation($wrapper);
+    }
+
+    setupValidation($wrapper) {
+        // Listen for form validation event to check capacity in real-time
+        this.$form.addEventListener('onFormieValidate', (e) => {
+            const dateInput = $wrapper.querySelector('[data-date-input]:checked, select[data-date-input]');
+            const slotInput = $wrapper.querySelector('[data-slot-input]:checked, select[data-slot-input]');
+
+            const selectedDate = dateInput?.value;
+            const selectedSlot = slotInput?.value;
+
+            if (!selectedDate || !selectedSlot) {
+                return; // Let required validation handle this
+            }
+
+            // Check if slot is still available
+            const availability = this.settings.slotAvailability?.[selectedDate]?.[selectedSlot];
+
+            if (availability && availability.isFull) {
+                e.preventDefault();
+
+                // Add error to the field
+                const errorMessage = 'Sorry, this time slot is now fully booked. Please select another slot.';
+                this.$field.classList.add('fui-error');
+
+                // Find or create error element
+                let errorEl = this.$field.querySelector('.fui-error-message');
+                if (!errorEl) {
+                    errorEl = document.createElement('div');
+                    errorEl.className = 'fui-error-message';
+                    this.$field.appendChild(errorEl);
+                }
+                errorEl.textContent = errorMessage;
+
+                // Trigger form error
+                if (e.detail.submitHandler) {
+                    e.detail.submitHandler.formSubmitError();
+                }
+            }
+        });
     }
 
     refreshCapacityFromServer($wrapper) {
