@@ -31,9 +31,51 @@ window.FormieBookingSlot = class FormieBookingSlot {
             return;
         }
 
+        // Refresh capacity from server (for static caching)
+        this.refreshCapacityFromServer($wrapper);
+
         // Setup event listeners
         this.setupDateSelection($wrapper);
         this.setupSlotSelection($wrapper);
+    }
+
+    refreshCapacityFromServer($wrapper) {
+        // Get form ID and field handle from wrapper
+        const formId = this.form?.id || this.$form?.getAttribute('data-fui-form-id');
+        const fieldHandle = this.$field?.getAttribute('data-fui-field') || $wrapper.getAttribute('data-field-handle');
+
+        if (!formId || !fieldHandle) {
+            console.warn('Booking Slot: Cannot refresh capacity - missing form ID or field handle');
+            return;
+        }
+
+        // Fetch fresh capacity data from server
+        fetch(`/actions/formie-booking-slot-field/capacity/get?formId=${formId}&fieldHandle=${fieldHandle}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch capacity data');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success && data.availability) {
+                    // Update settings with fresh availability data
+                    this.settings.slotAvailability = data.availability;
+
+                    // Get currently selected date
+                    const dateInput = $wrapper.querySelector('[data-date-input]:checked, select[data-date-input]');
+                    const selectedDate = dateInput?.value;
+
+                    // If a date is selected, refresh slot availability display
+                    if (selectedDate) {
+                        this.updateSlotAvailability($wrapper, selectedDate);
+                    }
+                }
+            })
+            .catch(error => {
+                console.warn('Booking Slot: Failed to refresh capacity', error);
+                // Fail silently - use cached HTML capacity as fallback
+            });
     }
 
     setupDateSelection($wrapper) {

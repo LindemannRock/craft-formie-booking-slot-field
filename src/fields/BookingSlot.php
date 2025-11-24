@@ -32,6 +32,11 @@ class BookingSlot extends FormField implements FormFieldInterface
     // =========================================================================
 
     /**
+     * @var array|null Cached submissions for capacity calculation (performance optimization)
+     */
+    private ?array $_cachedSubmissions = null;
+
+    /**
      * @var string Date configuration mode (range or specific)
      */
     public string $dateMode = 'specific';
@@ -577,11 +582,23 @@ class BookingSlot extends FormField implements FormFieldInterface
             }
         }
 
+        // Validate capacity - prevent overbooking race condition
+        // Check if slot is still available at submission time
+        if (!empty($value['date']) && !empty($value['slot'])) {
+            $remaining = $this->getRemainingCapacity($value['date'], $value['slot']);
+
+            if ($remaining <= 0) {
+                $error = Craft::t('formie', 'Sorry, this time slot is now fully booked. Please select another slot.');
+                return false;
+            }
+        }
+
         return true;
     }
 
     /**
      * Get remaining capacity for a specific slot
+     * Performance optimized: Caches submissions query to avoid multiple DB hits
      */
     public function getRemainingCapacity(string $date, string $slotKey): int
     {
@@ -607,13 +624,16 @@ class BookingSlot extends FormField implements FormFieldInterface
             return $this->maxCapacityPerSlot;
         }
 
-        // Get all submissions for this form and field
-        $submissions = \verbb\formie\elements\Submission::find()
-            ->form($form)
-            ->all();
+        // Cache submissions to avoid querying DB multiple times per page load
+        // This is called once per slot × date combination (potentially 100+ times)
+        if ($this->_cachedSubmissions === null) {
+            $this->_cachedSubmissions = \verbb\formie\elements\Submission::find()
+                ->form($form)
+                ->all();
+        }
 
         $bookedCount = 0;
-        foreach ($submissions as $submission) {
+        foreach ($this->_cachedSubmissions as $submission) {
             // Check submission status if configured
             if (!empty($this->bookedStatusIds)) {
                 // Skip if submission status is not in the "booked" list (e.g., cancelled status)
