@@ -31,15 +31,17 @@ window.FormieBookingSlot = class FormieBookingSlot {
             return;
         }
 
-        // Refresh capacity from server (for static caching)
-        this.refreshCapacityFromServer($wrapper);
-
-        // Setup event listeners
+        // Setup event listeners first (these work immediately)
         this.setupDateSelection($wrapper);
         this.setupSlotSelection($wrapper);
 
         // Setup validation to check capacity before submission
         this.setupValidation($wrapper);
+
+        // Delay capacity refresh slightly to ensure Formie is fully initialized
+        setTimeout(() => {
+            this.refreshCapacityFromServer($wrapper);
+        }, 100);
     }
 
     setupValidation($wrapper) {
