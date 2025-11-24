@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.3](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.9.2...v2.9.3) (2025-11-24)
+
+
+### Bug Fixes
+
+* add debug logging for FormieBookingSlot initialization ([7304334](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/7304334d7fa2bb7950205a98af156db5878d0e30))
+
 ## [2.9.2](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.9.1...v2.9.2) (2025-11-24)
 
 
