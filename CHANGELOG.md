@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.0](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.6.1...v2.7.0) (2025-11-24)
+
+
+### Features
+
+* add CapacityController and enhance BookingSlot field with caching and server capacity refresh ([a1d2a68](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/a1d2a6877122d77b78ce5335f009d508a741a38b))
+
 ## [2.6.1](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.6.0...v2.6.1) (2025-11-23)
 
 
