@@ -83,12 +83,20 @@ window.FormieBookingSlot = class FormieBookingSlot {
     }
 
     refreshCapacityFromServer($wrapper) {
-        // Get form ID and field handle from wrapper
-        const formId = this.form?.id || this.$form?.getAttribute('data-fui-form-id');
-        const fieldHandle = this.$field?.getAttribute('data-fui-field') || $wrapper.getAttribute('data-field-handle');
+        // Get form ID from form config
+        let formId = null;
+        if (this.form && this.form.formId) {
+            formId = this.form.formId;
+        }
+
+        // Get field handle from parent field element
+        let fieldHandle = null;
+        if (this.$field) {
+            fieldHandle = this.$field.getAttribute('data-field-handle');
+        }
 
         if (!formId || !fieldHandle) {
-            console.warn('Booking Slot: Cannot refresh capacity - missing form ID or field handle');
+            console.warn('Booking Slot: Cannot refresh capacity - missing form ID or field handle', {formId, fieldHandle});
             return;
         }
 
