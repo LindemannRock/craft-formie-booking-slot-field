@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.2](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.9.1...v2.9.2) (2025-11-24)
+
+
+### Bug Fixes
+
+* delay capacity refresh to ensure Formie initialization ([4c6c9cd](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/4c6c9cd7c25511c69011ebfca0ac56f88bec358a))
+
 ## [2.9.1](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.9.0...v2.9.1) (2025-11-24)
 
 
