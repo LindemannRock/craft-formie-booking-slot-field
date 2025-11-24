@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.0](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.7.0...v2.8.0) (2025-11-24)
+
+
+### Features
+
+* add error handling for required fields and fully booked slots in BookingSlot field ([63020e0](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/63020e0c4941c2813fc4001cd2de236a016a7039))
+
 ## [2.7.0](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.6.1...v2.7.0) (2025-11-24)
 
 
