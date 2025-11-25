@@ -32,11 +32,6 @@ class BookingSlot extends FormField implements FormFieldInterface
     // =========================================================================
 
     /**
-     * @var array|null Cached submissions for capacity calculation (performance optimization)
-     */
-    private ?array $_cachedSubmissions = null;
-
-    /**
      * @var string Date configuration mode (range or specific)
      */
     public string $dateMode = 'specific';
@@ -569,13 +564,24 @@ class BookingSlot extends FormField implements FormFieldInterface
      */
     public function validateSubmission($value, ElementInterface $element, &$error): bool
     {
-        // All validation temporarily disabled for debugging
+        // If field is required, ensure both date and slot are selected
+        if ($this->required) {
+            if (empty($value) || !is_array($value)) {
+                $error = Craft::t('formie', $this->errorMessage ?: 'This field is required.');
+                return false;
+            }
+
+            if (empty($value['date']) || empty($value['slot'])) {
+                $error = Craft::t('formie', $this->errorMessage ?: 'Please select both a date and time slot.');
+                return false;
+            }
+        }
+
         return true;
     }
 
     /**
      * Get remaining capacity for a specific slot
-     * Performance optimized: Caches submissions query to avoid multiple DB hits
      */
     public function getRemainingCapacity(string $date, string $slotKey): int
     {
@@ -601,16 +607,13 @@ class BookingSlot extends FormField implements FormFieldInterface
             return $this->maxCapacityPerSlot;
         }
 
-        // Cache submissions to avoid querying DB multiple times per page load
-        // This is called once per slot × date combination (potentially 100+ times)
-        if ($this->_cachedSubmissions === null) {
-            $this->_cachedSubmissions = \verbb\formie\elements\Submission::find()
-                ->form($form)
-                ->all();
-        }
+        // Get all submissions for this form and field
+        $submissions = \verbb\formie\elements\Submission::find()
+            ->form($form)
+            ->all();
 
         $bookedCount = 0;
-        foreach ($this->_cachedSubmissions as $submission) {
+        foreach ($submissions as $submission) {
             // Check submission status if configured
             if (!empty($this->bookedStatusIds)) {
                 // Skip if submission status is not in the "booked" list (e.g., cancelled status)
