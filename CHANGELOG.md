@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.7](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.9.6...v2.9.7) (2025-11-25)
+
+
+### debug
+
+* temporarily disable validation in BookingSlot submission ([9542e16](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/9542e16f974b41365791f03535b892c0bba5351f))
+
 ## [2.9.6](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.9.5...v2.9.6) (2025-11-25)
 
 
