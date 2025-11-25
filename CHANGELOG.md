@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.8](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.9.7...v2.9.8) (2025-11-25)
+
+
+### Bug Fixes
+
+* real-time capacity validation for booking slots ([d2fc320](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/d2fc32054600e9a14afcae22ad45b7d60f4c9807))
+
 ## [2.9.7](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.9.6...v2.9.7) (2025-11-25)
 
 
