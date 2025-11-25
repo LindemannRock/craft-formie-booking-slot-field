@@ -32,7 +32,7 @@ class BookingSlotFieldAsset extends AssetBundle
         ];
 
         $this->js = [
-            $isDevMode ? 'booking-slot.js' : 'booking-slot.min.js',
+            ($isDevMode ? 'booking-slot.js' : 'booking-slot.min.js') . '?v=' . time(),
         ];
 
         // Add settings page JS if in CP
