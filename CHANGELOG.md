@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.4](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.9.3...v2.9.4) (2025-11-25)
+
+
+### Bug Fixes
+
+* improve validation logic to skip capacity checks after initial validation ([f0ce04e](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/f0ce04eb7a6dca448fdcad6c93d856e5cf0df3bd))
+
 ## [2.9.3](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.9.2...v2.9.3) (2025-11-24)
 
 
