@@ -22,29 +22,34 @@ A Craft CMS plugin that provides a flexible booking slot field for Verbb's Formi
 ## Features
 
 ### Flexible Date Configuration
+
 - **Specific Dates**: Define exact dates for events and special occasions
 - **Date Range**: Set start/end dates with automatic date generation
 - **Day of Week Filtering**: Choose which weekdays are available (e.g., Mon-Fri only)
 - **Blackout Dates**: Exclude specific dates (holidays, closures)
 
 ### Automatic Time Slot Generation
+
 - **Operating Hours**: Set daily start/end times with hour/minute dropdowns
 - **Slot Duration**: Choose from 15 minutes to 4 hours
 - **Smart Generation**: Slots automatically created based on your rules
 
 ### Capacity Tracking
+
 - **Real-time Availability**: Shows remaining spots per slot
 - **Submission Status Integration**: Count only confirmed bookings, exclude cancellations
 - **Full Slot Detection**: Automatically disables fully booked slots
 - **Visual Indicators**: Clear display of available vs. full slots
 
 ### Display Options
+
 - **Radio Buttons**: Visual button cards for dates and slots
 - **Dropdown Selects**: Compact dropdowns for many options
 - **Responsive Design**: Works seamlessly on all devices
 - **Customizable**: Configurable per field
 
 ### Seamless Integration
+
 - Native Formie field with full validation support
 - Email notification templates included
 - Control panel submission display
@@ -101,6 +106,7 @@ Navigate to **Settings → Plugins → Formie Booking Slot Field** to configure 
 #### General Tab
 
 **Date Selection Mode**
+
 - **Specific Dates**: For events with fixed dates (e.g., Dec 5-6, 2025)
   - Add dates in YYYY-MM-DD format (e.g., 2025-12-05)
   - Optional display labels (e.g., "December 5th, 2025")
@@ -113,28 +119,34 @@ Navigate to **Settings → Plugins → Formie Booking Slot Field** to configure 
 #### Settings Tab
 
 **Time Configuration**
+
 - **Start Time**: Hour and minute when bookings begin each day
 - **End Time**: Hour and minute when bookings end each day
 - **Slot Duration**: Choose from 15 min, 30 min, 1 hour, 2 hours, etc.
 
 **Capacity Management**
+
 - **Max Capacity Per Slot**: How many people per time slot
 - **Show Remaining Capacity**: Display spots left to users
 - **Count As Booked Statuses**: Select which submission statuses count (e.g., only "Confirmed")
 
 **Display Options**
+
 - **Date Display Type**: Radio buttons (visual) or Dropdown (compact)
 - **Slot Display Type**: Radio buttons (visual) or Dropdown (compact)
 
 #### Appearance Tab
+
 - Label position, instructions, visibility settings
 
 #### Advanced Tab
+
 - Handle, CSS classes, container attributes
 
 ### Example Configurations
 
 #### Event Booking (e.g., M Cars Driving Experience)
+
 ```
 Date Mode: Specific Dates
 Dates: 2025-12-05, 2025-12-06
@@ -147,6 +159,7 @@ Result: 12 slots (6 per day × 2 days), 192 total capacity
 ```
 
 #### Doctor Appointments
+
 ```
 Date Mode: Date Range
 Start: 2025-01-01
@@ -161,6 +174,7 @@ Result: 16 slots/day × ~22 weekdays = ~352 appointments
 ```
 
 #### Workshop Series
+
 ```
 Date Mode: Specific Dates
 Dates: Workshop dates
@@ -175,11 +189,13 @@ Result: 2-3 sessions per day with group registration
 ### Handling Cancellations
 
 #### Option 1: Delete Submission (Simple)
+
 - Go to Formie → Submissions
 - Delete the booking
 - Capacity automatically increases
 
 #### Option 2: Status Tracking (Recommended)
+
 1. **Set up submission statuses** in Formie → Settings → Statuses:
    - Add status: "Confirmed"
    - Add status: "Cancelled"
@@ -214,8 +230,10 @@ In your templates, the booking field is rendered automatically by Formie:
 ```twig
 {# In email notifications or templates #}
 {% set booking = submission.bookingSlotHandle %}
-{{ booking.date }} {# e.g., 2025-12-05 #}
-{{ booking.slot }} {# e.g., 10:00-12:00 #}
+{{ booking.date }}
+{# e.g., 2025-12-05 #}
+{{ booking.slot }}
+{# e.g., 10:00-12:00 #}
 ```
 
 ### GraphQL Support
@@ -224,11 +242,11 @@ Query booking slot data via GraphQL:
 
 ```graphql
 query {
-  formieSubmissions(form: "bookingForm") {
-    ... on bookingForm_Submission {
-      bookingSlot
-    }
-  }
+	formieSubmissions(form: "bookingForm") {
+		... on bookingForm_Submission {
+			bookingSlot
+		}
+	}
 }
 ```
 
@@ -236,29 +254,29 @@ query {
 
 ### General Settings
 
-| Setting | Description | Options |
-|---------|-------------|---------|
-| **Date Selection Mode** | How dates are configured | `specific`, `range` |
-| **Specific Dates** | Individual dates (specific mode) | Table: Date, Label |
-| **Start Date** | First available date (range mode) | Date picker |
-| **End Date** | Last available date (range mode) | Date picker |
-| **Days of Week** | Available weekdays (range mode) | Sun-Sat checkboxes |
-| **Blackout Dates** | Dates to exclude | Table: Date |
+| Setting                 | Description                       | Options             |
+| ----------------------- | --------------------------------- | ------------------- |
+| **Date Selection Mode** | How dates are configured          | `specific`, `range` |
+| **Specific Dates**      | Individual dates (specific mode)  | Table: Date, Label  |
+| **Start Date**          | First available date (range mode) | Date picker         |
+| **End Date**            | Last available date (range mode)  | Date picker         |
+| **Days of Week**        | Available weekdays (range mode)   | Sun-Sat checkboxes  |
+| **Blackout Dates**      | Dates to exclude                  | Table: Date         |
 
 ### Settings Tab
 
-| Setting | Description | Options |
-|---------|-------------|---------|
-| **Start Time - Hour** | Hour when bookings start | 00-23 |
-| **Start Time - Minute** | Minute when bookings start | 00, 15, 30, 45 |
-| **End Time - Hour** | Hour when bookings end | 00-23 |
-| **End Time - Minute** | Minute when bookings end | 00, 15, 30, 45 |
-| **Slot Duration** | Length of each booking slot | 15min-4hours |
-| **Max Capacity Per Slot** | People per slot | Number |
-| **Show Remaining Capacity** | Display spots left | true/false |
-| **Count As Booked Statuses** | Which statuses count | Formie statuses |
-| **Date Display Type** | How dates appear | `radio`, `select` |
-| **Slot Display Type** | How slots appear | `radio`, `select` |
+| Setting                      | Description                 | Options           |
+| ---------------------------- | --------------------------- | ----------------- |
+| **Start Time - Hour**        | Hour when bookings start    | 00-23             |
+| **Start Time - Minute**      | Minute when bookings start  | 00, 15, 30, 45    |
+| **End Time - Hour**          | Hour when bookings end      | 00-23             |
+| **End Time - Minute**        | Minute when bookings end    | 00, 15, 30, 45    |
+| **Slot Duration**            | Length of each booking slot | 15min-4hours      |
+| **Max Capacity Per Slot**    | People per slot             | Number            |
+| **Show Remaining Capacity**  | Display spots left          | true/false        |
+| **Count As Booked Statuses** | Which statuses count        | Formie statuses   |
+| **Date Display Type**        | How dates appear            | `radio`, `select` |
+| **Slot Display Type**        | How slots appear            | `radio`, `select` |
 
 ## File Structure
 
