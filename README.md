@@ -93,6 +93,7 @@ In the Control Panel, go to Settings → Plugins and click "Install" for Formie 
 
 ### Plugin Settings
 
+
 Navigate to **Settings → Plugins → Formie Booking Slot Field** to configure the plugin name.
 
 ## Usage
@@ -102,6 +103,7 @@ Navigate to **Settings → Plugins → Formie Booking Slot Field** to configure 
 1. Open your form in the Formie form builder
 2. Click "Add Field" and select "Booking Slot" from the field types
 3. Configure the field settings across four tabs:
+
 
 #### General Tab
 
