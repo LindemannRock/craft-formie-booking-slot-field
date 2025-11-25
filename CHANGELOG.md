@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.5](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.9.4...v2.9.5) (2025-11-25)
+
+
+### Documentation
+
+* update README ([a902109](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/a9021090d832c07fcbb929549ece75056b1f188c))
+
 ## [2.9.4](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.9.3...v2.9.4) (2025-11-25)
 
 
