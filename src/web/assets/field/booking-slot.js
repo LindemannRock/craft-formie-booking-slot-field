@@ -53,9 +53,19 @@ window.FormieBookingSlot = class FormieBookingSlot {
     }
 
     setupValidation($wrapper) {
+        // Flag to skip validation after we've already checked
+        let capacityValidated = false;
+
         // Listen for form validation event to check capacity in real-time
         this.$form.addEventListener('onFormieValidate', (e) => {
             console.log('onFormieValidate event fired!');
+
+            // If we already validated capacity, allow submission to proceed
+            if (capacityValidated) {
+                console.log('Capacity already validated - allowing submission');
+                capacityValidated = false; // Reset for next submission attempt
+                return;
+            }
 
             const dateInput = $wrapper.querySelector('[data-date-input]:checked, select[data-date-input]');
             const slotInput = $wrapper.querySelector('[data-slot-input]:checked, select[data-slot-input]');
@@ -123,6 +133,8 @@ window.FormieBookingSlot = class FormieBookingSlot {
                             }
                         } else {
                             console.log('Slot available - continuing submission');
+                            // Set flag so we skip validation on retry
+                            capacityValidated = true;
                             // Slot is available, continue with submission
                             if (e.detail.submitHandler) {
                                 e.detail.submitHandler.submitForm();
@@ -130,6 +142,8 @@ window.FormieBookingSlot = class FormieBookingSlot {
                         }
                     } else {
                         console.warn('Failed to check capacity - allowing submission');
+                        // Set flag so we skip validation on retry
+                        capacityValidated = true;
                         // If we can't check, allow submission (server-side validation will catch it)
                         if (e.detail.submitHandler) {
                             e.detail.submitHandler.submitForm();
@@ -138,6 +152,8 @@ window.FormieBookingSlot = class FormieBookingSlot {
                 })
                 .catch(error => {
                     console.error('Capacity check failed:', error);
+                    // Set flag so we skip validation on retry
+                    capacityValidated = true;
                     // If check fails, allow submission (server-side validation will catch it)
                     if (e.detail.submitHandler) {
                         e.detail.submitHandler.submitForm();
