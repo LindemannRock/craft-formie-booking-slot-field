@@ -573,13 +573,11 @@ class BookingSlot extends FormField implements FormFieldInterface
         if ($this->required) {
             if (empty($value) || !is_array($value)) {
                 $error = Craft::t('formie', $this->errorMessage ?: 'This field is required.');
-                $element->addError($this->handle, $error);
                 return false;
             }
 
             if (empty($value['date']) || empty($value['slot'])) {
                 $error = Craft::t('formie', $this->errorMessage ?: 'Please select both a date and time slot.');
-                $element->addError($this->handle, $error);
                 return false;
             }
         }
@@ -591,7 +589,6 @@ class BookingSlot extends FormField implements FormFieldInterface
 
             if ($remaining <= 0) {
                 $error = Craft::t('formie', 'Sorry, this time slot is now fully booked. Please select another slot.');
-                $element->addError($this->handle, $error);
                 return false;
             }
         }
