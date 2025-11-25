@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.6](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.9.5...v2.9.6) (2025-11-25)
+
+
+### Code Refactoring
+
+* remove redundant error handling for required fields in BookingSlot ([2a10995](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/2a1099520ef5c75d56cb636c4c5e958f558d6a70))
+
 ## [2.9.5](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.9.4...v2.9.5) (2025-11-25)
 
 
