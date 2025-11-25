@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.9](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.9.8...v2.9.9) (2025-11-25)
+
+
+### Bug Fixes
+
+* add versioning to booking slot JavaScript files and remove redundant validation logic ([45f41a1](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/45f41a1804dc1981360c6a7e4104bda0ed09444a))
+
 ## [2.9.8](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.9.7...v2.9.8) (2025-11-25)
 
 
