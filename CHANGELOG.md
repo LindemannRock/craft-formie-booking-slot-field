@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.10.0](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.9.9...v2.10.0) (2025-12-02)
+
+
+### Features
+
+* implement caching for booking counts and form retrieval in BookingSlot field ([99e7ec4](https://github.com/LindemannRock/craft-formie-booking-slot-field/commit/99e7ec41318351e0efda51d7b4364b9aaf9444cd))
+
 ## [2.9.9](https://github.com/LindemannRock/craft-formie-booking-slot-field/compare/v2.9.8...v2.9.9) (2025-11-25)
 
 
