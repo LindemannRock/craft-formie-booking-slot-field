@@ -581,12 +581,23 @@ class BookingSlot extends FormField implements FormFieldInterface
     }
 
     /**
-     * Get remaining capacity for a specific slot
+     * @var array|null Cached booking counts
      */
-    public function getRemainingCapacity(string $date, string $slotKey): int
+    private ?array $_bookingCounts = null;
+
+    /**
+     * @var \verbb\formie\elements\Form|null|false Cached form (false means not found)
+     */
+    private $_cachedForm = null;
+
+    /**
+     * Get the form this field belongs to (cached)
+     */
+    private function getCachedForm()
     {
-        // Get the form - in Formie 2, we need to find it differently
-        $form = null;
+        if ($this->_cachedForm !== null) {
+            return $this->_cachedForm === false ? null : $this->_cachedForm;
+        }
 
         // Try to get form from all forms and match by field handle
         $allForms = \verbb\formie\elements\Form::find()->all();
@@ -595,43 +606,73 @@ class BookingSlot extends FormField implements FormFieldInterface
             if ($layout) {
                 foreach ($layout->getCustomFields() as $field) {
                     if ($field->handle === $this->handle) {
-                        $form = $possibleForm;
-                        break 2;
+                        $this->_cachedForm = $possibleForm;
+                        return $possibleForm;
                     }
                 }
             }
         }
 
-        if (!$form) {
-            // Can't determine capacity without knowing the form - return max capacity
-            return $this->maxCapacityPerSlot;
+        $this->_cachedForm = false;
+        return null;
+    }
+
+    /**
+     * Load all booking counts in a single query (cached)
+     */
+    private function loadBookingCounts(): void
+    {
+        if ($this->_bookingCounts !== null) {
+            return; // Already loaded
         }
 
-        // Get all submissions for this form and field
-        $submissions = \verbb\formie\elements\Submission::find()
-            ->form($form)
-            ->all();
+        $this->_bookingCounts = [];
 
-        $bookedCount = 0;
+        $form = $this->getCachedForm();
+        if (!$form) {
+            return;
+        }
+
+        // Build query for submissions
+        $query = \verbb\formie\elements\Submission::find()
+            ->form($form);
+
+        // Filter by status if configured
+        if (!empty($this->bookedStatusIds)) {
+            $query->statusId($this->bookedStatusIds);
+        }
+
+        $submissions = $query->all();
+
+        // Count bookings for each date+slot combination
         foreach ($submissions as $submission) {
-            // Check submission status if configured
-            if (!empty($this->bookedStatusIds)) {
-                // Skip if submission status is not in the "booked" list (e.g., cancelled status)
-                if (!in_array($submission->statusId, $this->bookedStatusIds)) {
-                    continue;
-                }
-            }
-
             $fieldValue = $submission->getFieldValue($this->handle);
 
             if (is_array($fieldValue) &&
                 isset($fieldValue['date']) &&
-                isset($fieldValue['slot']) &&
-                $fieldValue['date'] === $date &&
-                $fieldValue['slot'] === $slotKey) {
-                $bookedCount++;
+                isset($fieldValue['slot'])) {
+
+                $date = $fieldValue['date'];
+                $slot = $fieldValue['slot'];
+                $key = $date . '|' . $slot;
+
+                if (!isset($this->_bookingCounts[$key])) {
+                    $this->_bookingCounts[$key] = 0;
+                }
+                $this->_bookingCounts[$key]++;
             }
         }
+    }
+
+    /**
+     * Get remaining capacity for a specific slot
+     */
+    public function getRemainingCapacity(string $date, string $slotKey): int
+    {
+        $this->loadBookingCounts();
+
+        $key = $date . '|' . $slotKey;
+        $bookedCount = $this->_bookingCounts[$key] ?? 0;
 
         return max(0, $this->maxCapacityPerSlot - $bookedCount);
     }
